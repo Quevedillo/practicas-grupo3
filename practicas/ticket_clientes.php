@@ -5,34 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creación y Seguimiento de Tickets</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script>
-        function cargarTickets() {
-            fetch('backend/lista_tickets.php')
-                .then(response => response.json())
-                .then(data => {
-                    let tablaTickets = document.getElementById('tablaTickets');
-                    tablaTickets.innerHTML = '';
-                    data.forEach(ticket => {
-                        tablaTickets.innerHTML += `
-                            <tr>
-                                <td>${ticket.id}</td>
-                                <td>${ticket.asunto}</td>
-                                <td>${ticket.estado}</td>
-                                <td>${ticket.fecha_creacion}</td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" onclick="verDetalle(${ticket.id})">Ver</button>
-                                </td>
-                            </tr>`;
-                    });
-                });
-        }
-
-        function verDetalle(id) {
-            window.location.href = `detalle_ticket.php?id=${id}`;
-        }
-
-        window.onload = cargarTickets;
-    </script>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
