@@ -29,7 +29,7 @@
                         <button type="submit" class="btn btn-warning w-100">Recuperar contraseña</button>
                     </form>
                 </div>
-                <a href="registro.html" class="btn btn-link w-100 mt-3">¿No tienes cuenta? Regístrate</a>
+                <a href="registroUsuario.php" class="btn btn-link w-100 mt-3">¿No tienes cuenta? Regístrate</a>
             </div>
         </div>
     </div>

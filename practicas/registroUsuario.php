@@ -12,12 +12,8 @@
             <div class="col-md-4">
                 <h3 class="text-center">Registro</h3>
                 <form action="backend/registro.php" method="POST">
-                    <input type="text" name="nombre" class="form-control my-2" placeholder="Nombre completo" required>
-                    <input type="email" name="correo" class="form-control my-2" placeholder="Correo" required>
+                    <input type="email" name="correo" class="form-control my-2" placeholder="Usuario" required>
                     <input type="password" name="contraseña" class="form-control my-2" placeholder="Contraseña" required>
-                    <select name="rol" class="form-control my-2">
-                        <option value="cliente">Cliente</option>
-                    </select>
                     <button type="submit" class="btn btn-success w-100">Registrarse</button>
                 </form>
             </div>
