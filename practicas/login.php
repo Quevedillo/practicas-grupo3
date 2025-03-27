@@ -1,14 +1,9 @@
 <?php
 session_start();
 
-// Habilitar reporting de errores para depuración
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Configuración de la base de datos - CAMBIADO a ticket_system
+// Configuración de la base de datos CORREGIDA
 $host = 'localhost';
-$dbname = 'ticket_system';  // Cambiado para coincidir con tu SQL
+$dbname = 'ticket';  // Nombre correcto según tu SQL
 $user = 'root';
 $pass = '';
 
