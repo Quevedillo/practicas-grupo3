@@ -16,18 +16,34 @@
             <tr>
                 <th>ID de Ticket</th>
                 <th>Usuario</th>
-                <th>Descripción</th>
-                <th>Status</th>
-                <th>Id de Tecnico</th>
-                <th>Nombre Tecnico</th>
+                <th>Categoria</th>
+                <th>Titulo</th>
+                <th>Descripcion</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Fecha de creación</th>
+                <th>Fecha de actualizacion</th>
             </tr>
         </thead>
         <tbody>
+            <!--Crear conexion con la base de datos -->
             <tr>
-
+                <!--Mostrar informacion de la tabla tickets mediante php-->
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="asignarTecnico.php?=<?php echo $ticket['id']; ?>" class="btn btn-warning btn-sm">Asignar Técnico</a>
+                </td>
             </tr>
         </tbody>
     </table>
-
+    <a href="logout.php" class="btn btn-danger btn-sm mt-2">Cerrar Sesión</a>
 </body>
 </html>
