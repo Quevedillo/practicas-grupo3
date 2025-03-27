@@ -19,6 +19,7 @@
                 <img href="logo" alt="logo" src="./logo.png">
                 <h3 class="text-center">Iniciar Sesión</h3>
                 <form action="backend/login.php" method="POST">
+                    <h3>Sistema de Tickets de Soporte</h3>
                     <label>Usuario:</label>
                     <input type="user" name="usuario" class="form-control my-2" required>
                     <label>Contraseña:</label>
