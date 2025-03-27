@@ -26,7 +26,7 @@
                     <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                     <a href="#" class="d-block text-center mt-2" onclick="toggleRecuperar()">¿Olvidó tu contraseña?</a>
                     <a href="registroUsuario.php" class="btn btn-link w-100 mt-3">Registrarse</a>
-                </form>6ç
+                </form>
                 <div id="recuperarDiv" style="display: none;" class="mt-3">
                     <form action="backend/recuperar.php" method="POST">
                         <input type="email" name="correo_recuperar" class="form-control my-2" placeholder="Introduce tu correo" required>
