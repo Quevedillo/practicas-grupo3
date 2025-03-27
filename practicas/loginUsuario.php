@@ -1,3 +1,70 @@
+<?php
+// backend/login.php
+
+// Database connection
+$servername = "localhost";
+$username = "your_username";
+$password = "your_password";
+$dbname = "ticket";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get user input
+$username = $_POST['usuario'];
+$password = $_POST['contraseña'];
+
+// Prepare and execute query
+$stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 1) {
+    $user = $result->fetch_assoc();
+    // Verify password (in a real-world scenario, use password_verify() with hashed passwords)
+    if ($password === $user['password']) {
+        // Start session and store user information
+        session_start();
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+        
+        // Redirect based on user role
+        switch ($user['role']) {
+            case 'admin':
+                header("Location: admin_dashboard.php");
+                break;
+            case 'tech':
+                header("Location: tech_dashboard.php");
+                break;
+            case 'client':
+                header("Location: client_dashboard.php");
+                break;
+            default:
+                header("Location: index.php");
+        }
+        exit();
+    } else {
+        $error = "Contraseña incorrecta";
+    }
+} else {
+    $error = "Usuario no encontrado";
+}
+
+// If login fails, redirect back to login page with error message
+header("Location: ../loginUsuario.php?error=" . urlencode($error));
+exit();
+
+$stmt->close();
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,7 +86,7 @@
                 <img href="logo" alt="logo" src="./logo.png">
                 <h3 class="text-center">Iniciar Sesión</h3>
                 <form action="backend/login.php" method="POST">
-                    <h3>Sistema de Tickets de Soporte</h3>
+                    <h6>Sistema de Tickets de Soporte</h6>
                     <label>Usuario:</label>
                     <input type="user" name="usuario" class="form-control my-2" required>
                     <label>Contraseña:</label>
