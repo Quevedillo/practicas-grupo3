@@ -6,9 +6,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Configuración de la base de datos
+// Configuración de la base de datos - CAMBIADO a ticket_system
 $host = 'localhost';
-$dbname = 'ticket';
+$dbname = 'ticket_system';  // Cambiado para coincidir con tu SQL
 $user = 'root';
 $pass = '';
 
@@ -22,7 +22,13 @@ try {
 
 // Verificar si el usuario ya está logueado
 if (isset($_SESSION['user_id'])) {
-    header('Location: ' . ($_SESSION['role'] === 'admin' ? 'index_admin.php' : 'index_usuario.php'));
+    // Redirigir según el rol - verifica que estos archivos existan
+    $redirect = match($_SESSION['role']) {
+        'admin' => 'index_admin.php',
+        'tech' => 'index_tecnico.php',  // Añadido para técnicos
+        default => 'index_usuario.php'
+    };
+    header("Location: $redirect");
     exit();
 }
 
@@ -38,24 +44,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Verificar si el usuario existe
     if ($user) {
-        $stored_password = $user['password'];
-        
-        // Si la contraseña no está cifrada, cifrarla y actualizarla en la base de datos
-        if (!password_get_info($stored_password)['algo']) { 
-            $hashed_password = password_hash($stored_password, PASSWORD_DEFAULT);
+        // Verificación para contraseñas en texto plano (como en tu SQL)
+        if ($user['password'] === $password) {
+            // Si coincide con texto plano, creamos hash y actualizamos
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $update_stmt = $pdo->prepare("UPDATE users SET password = :password WHERE id = :id");
             $update_stmt->execute(['password' => $hashed_password, 'id' => $user['id']]);
-            $stored_password = $hashed_password;
-        }
-        
-        // Verificar la contraseña introducida por el usuario con la almacenada
-        if (password_verify($password, $stored_password)) {
+            
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
 
-            // Redirigir según el rol
-            header('Location: ' . ($user['role'] === 'admin' ? 'index_admin.php' : 'index_usuario.php'));
+            $redirect = match($user['role']) {
+                'admin' => 'index_admin.php',
+                'tech' => 'index_tecnico.php',
+                default => 'index_usuario.php'
+            };
+            header("Location: $redirect");
+            exit();
+        } elseif (password_verify($password, $user['password'])) {
+            // Si la contraseña ya estaba hasheada y es correcta
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
+
+            $redirect = match($user['role']) {
+                'admin' => 'index_admin.php',
+                'tech' => 'index_tecnico.php',
+                default => 'index_usuario.php'
+            };
+            header("Location: $redirect");
             exit();
         } else {
             $error_message = "Contraseña incorrecta.";
@@ -72,7 +90,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema de Tickets</title>
-    <link rel="stylesheet" href="estilologin.css">
+    <style>
+        /* Estilos básicos si no tienes el CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .login-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .login-button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        .dark-mode .login-box {
+            background: #444;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -115,12 +187,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         const themeButton = document.getElementById('theme-button');
         const body = document.body;
 
+        // Verificar preferencia del usuario
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            themeButton.textContent = 'Modo Claro';
+        }
+
         themeButton.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
                 themeButton.textContent = 'Modo Claro';
+                localStorage.setItem('darkMode', 'enabled');
             } else {
                 themeButton.textContent = 'Modo Oscuro';
+                localStorage.setItem('darkMode', 'disabled');
             }
         });
     </script>
