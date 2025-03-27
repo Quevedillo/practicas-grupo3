@@ -8,7 +8,7 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h2 class="text-center">Creación y Seguimiento de Tickets</h2>
+        <h2 class="text-center">Creación del Ticket </h2>
         <button class="btn btn-success mb-3" onclick="document.getElementById('formularioTicket').style.display = 'block'">Nuevo Ticket</button>
         
         <table class="table table-bordered">
