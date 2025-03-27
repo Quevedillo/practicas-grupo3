@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php'; // Asegúrate de tener este archivo con la conexión a la BD
+require 'database.php'; // Asegúrate de tener este archivo con la conexión a la BD
 
 // Verificar si el usuario es administrador
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
