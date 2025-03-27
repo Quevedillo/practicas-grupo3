@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 
 // Configuración de la base de datos
 $host = 'localhost';
-$dbname = 'ticket_system';
+$dbname = 'ticket';
 $user = 'root';
 $pass = '';
 
