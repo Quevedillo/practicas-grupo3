@@ -5,7 +5,7 @@
 $servername = "localhost";
 $username = "your_username";
 $password = "your_password";
-$dbname = "ticket";
+$dbname = "ticket_system";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
