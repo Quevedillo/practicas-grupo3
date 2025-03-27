@@ -1,14 +1,39 @@
 <?php
-// Iniciar sesión si es necesario
-session_start();
+require_once 'includes/db_connection.php'; // Conexión a la base de datos
+require_once 'includes/auth.php'; // Manejo de autenticación
 
-// Aquí deberías incluir la lógica para verificar si el usuario está autenticado
-$nombreUsuario = "Usuario"; // Reemplaza esto con el nombre real del usuario
-
-// Procesar el formulario cuando se envía
+// Si se envió el formulario, procesar el ticket
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo "Formulario enviado. Procesar los datos aquí.";
+    $title = $_POST['title'];
+    $category = $_POST['category'];
+    $priority = $_POST['priority'];
+    $description = $_POST['description'];
+
+    // Manejo de archivo adjunto
+    $attachment_path = null;
+    if (!empty($_FILES['attachment']['name'])) {
+        $upload_dir = "uploads/";
+        $filename = basename($_FILES["attachment"]["name"]);
+        $target_file = $upload_dir . $filename;
+        
+        if (move_uploaded_file($_FILES["attachment"]["tmp_name"], $target_file)) {
+            $attachment_path = $target_file;
+        }
+    }
+
+    // Insertar el ticket en la base de datos
+    $stmt = $conn->prepare("INSERT INTO tickets (user_id, title, category, priority, description, attachment, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+    $stmt->bind_param("isssss", $user_id, $title, $category, $priority, $description, $attachment_path);
+
+    if ($stmt->execute()) {
+        header("Location: index.php"); // Redirigir a index.php después de crear el ticket
+        exit();
+    } else {
+        echo "Error al crear el ticket.";
+    }
 }
+
+// Obtener información del usuario (para mostrar en la interfaz)
 ?>
 
 <!DOCTYPE html>
@@ -16,103 +41,89 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Tickets</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 800px;
-            margin: 0 auto;
-            border: 1px solid #ccc;
-        }
-        .header {
-            background-color: #f0f0f0;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .nav {
-            background-color: #e0e0e0;
-            padding: 10px;
-        }
-        .content {
-            padding: 20px;
-        }
-        form {
-            display: grid;
-            gap: 10px;
-        }
-        input[type="text"], select, textarea {
-            width: 100%;
-            padding: 5px;
-        }
-        textarea {
-            height: 100px;
-        }
-        .buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-    </style>
+    <title>Nuevo Ticket - Sistema de Tickets</title>
+    <link rel="stylesheet" href="estilocreacionticket.css">
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div>LOGO</div>
-            <div><?php echo $nombreUsuario; ?> ▼</div>
-        </div>
-        <div class="nav">
-            <a href="#">Panel</a> |
-            <a href="#">Mis Tickets</a> |
-            <a href="#">Perfil</a>
-        </div>
-        <div class="content">
-            <h2>Nuevo Ticket</h2>
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
-                <div>
-                    <label for="titulo">Título:</label>
-                    <input type="text" id="titulo" name="titulo" required>
+        <header class="header">
+            <div class="logo">
+                <img src="https://camaradesevilla.com/wp-content/uploads/2024/07/S00-logo-Grupo-Solutia-v01-1.png" alt="Logo del Sistema">
+            </div>
+            <div class="header-right">
+                <div class="theme-toggle">
+                    <button id="theme-button">Modo Oscuro</button>
                 </div>
-                <div>
-                    <label for="categoria">Categoría:</label>
-                    <select id="categoria" name="categoria" required>
-                        <option value="">Seleccione una categoría</option>
-                        <option value="1">Hardware</option>
-                        <option value="2">Software</option>
-                        <option value="2">Red</option>
-                        <option value="2">Otro</option>
-                        <!-- Añade más opciones según sea necesario -->
-                    </select>
+                <div class="user-menu">
+                    <span><?php echo htmlspecialchars($user['username']); ?> ▼</span>
                 </div>
-                <div>
-                    <label for="prioridad">Prioridad:</label>
-                    <select id="prioridad" name="prioridad" required>
-                        <option value="">Seleccione una prioridad</option>
-                        <option value="baja">Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                        <option value="alta">URGENTE</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" required></textarea>
-                </div>
-                <div>
-                    <label for="archivo">Adjuntar archivo:</label>
-                    <input type="file" id="archivo" name="archivo">
-                </div>
-                <div class="buttons">
-                    <button type="button" onclick="window.location.href='#';">Cancelar</button>
-                    <button type="submit">Crear Ticket</button>
-                </div>
-            </form>
-        </div>
+            </div>
+        </header>
+
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php">Panel</a></li>
+                <li><a href="mis_tickets.php">Mis Tickets</a></li>
+                <li><a href="perfil.php">Perfil</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="new-ticket-form">
+                <h2>Nuevo Ticket</h2>
+                <form action="crear_nuevo_ticket.php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="title">Título:</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Categoría:</label>
+                        <select id="category" name="category" required>
+                            <option value="hardware">Hardware</option>
+                            <option value="software">Software</option>
+                            <option value="network">Red</option>
+                            <option value="other">Otros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Prioridad:</label>
+                        <select id="priority" name="priority" required>
+                            <option value="low">Baja</option>
+                            <option value="medium">Media</option>
+                            <option value="high">Alta</option>
+                            <option value="urgent">Urgente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripción:</label>
+                        <textarea id="description" name="description" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="attachment">Adjuntar archivo:</label>
+                        <input type="file" id="attachment" name="attachment">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" onclick="window.location.href='index.php'">Cancelar</button>
+                        <button type="submit" class="create-ticket-button">Crear Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
+
+    <script>
+        // Script para cambiar entre modo oscuro y modo claro
+        const themeButton = document.getElementById('theme-button');
+        const body = document.body;
+
+        themeButton.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeButton.textContent = 'Modo Claro';
+            } else {
+                themeButton.textContent = 'Modo Oscuro';
+            }
+        });
+    </script>
 </body>
 </html>
