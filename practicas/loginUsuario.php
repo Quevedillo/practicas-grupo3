@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
+    <title>Login y Recuperar Contraseña</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  
+    <script>
+        function toggleRecuperar() {
+            var recuperarDiv = document.getElementById("recuperarDiv");
+            recuperarDiv.style.display = recuperarDiv.style.display === "none" ? "block" : "none";
+        }
+    </script>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
@@ -24,22 +29,7 @@
                         <button type="submit" class="btn btn-warning w-100">Recuperar contraseña</button>
                     </form>
                 </div>
-                <button class="btn btn-link w-100 mt-3" onclick="toggleRegistro()">Registrarse</button>
-            </div>
-
-            <div class="col-md-4" id="registroDiv" style="display: none;">
-                <h3 class="text-center">Registro</h3>
-                <form action="backend/registro.php" method="POST">
-                    <input type="text" name="username" class="form-control my-2" placeholder="Nombre completo" required>
-                    <input type="email" name="email" class="form-control my-2" placeholder="Correo" required>
-                    <input type="password" name="password" class="form-control my-2" placeholder="Contraseña" required>
-                    <select name="rol" class="form-control my-2">
-                        <option value="admin">Admin</option>
-                        <option value="tech">Técnico</option>
-                        <option value="client">Cliente</option>
-                    </select>
-                    <button type="submit" class="btn btn-success w-100">Registrarse</button>
-                </form>
+                <a href="registro.html" class="btn btn-link w-100 mt-3">¿No tienes cuenta? Regístrate</a>
             </div>
         </div>
     </div>
