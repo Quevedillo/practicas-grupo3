@@ -1,34 +1,59 @@
 <?php
-session_start();
-include("database.php"); // Incluir el archivo de conexión PDO
+// Configuración inicial de sesión más estricta
+session_start([
+    'cookie_lifetime' => 86400, // 1 día
+    'cookie_secure'   => isset($_SERVER['HTTPS']), // Solo enviar cookies sobre HTTPS
+    'cookie_httponly' => true, // Prevenir acceso a cookies via JavaScript
+    'use_strict_mode' => true // Mejor seguridad para IDs de sesión
+]);
+
+include("database.php");
+
+// Limpiar cualquier sesión existente si llegan a la página de login
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_SESSION['user_id'])) {
+    unset($_SESSION['user_id']);
+    unset($_SESSION['username']);
+    session_regenerate_id(true);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['email_or_username']) && isset($_POST['password'])) {  // Verificar si los datos están presentes
-        $email_or_username = $_POST['email_or_username'];  // Puede ser email o nombre de usuario
-        $password = $_POST['password'];  // Obtener contraseña del formulario
+    if (!empty($_POST['email_or_username']) && !empty($_POST['password'])) {
+        $email_or_username = trim($_POST['email_or_username']);
+        $password = $_POST['password'];
 
-        // Usar PDO para hacer la consulta (busca por email o username)
-        $sql = "SELECT * FROM users WHERE email = :email_or_username OR username = :email_or_username";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':email_or_username', $email_or_username, PDO::PARAM_STR);  // Vincular el parámetro
-        $stmt->execute();
+        try {
+            $sql = "SELECT * FROM users WHERE email = :email_or_username OR username = :email_or_username";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':email_or_username', $email_or_username, PDO::PARAM_STR);
+            $stmt->execute();
 
-        // Verificar si el usuario existe
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch();
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                header("Location: dashboard.php");
-                exit();
+            if ($stmt->rowCount() === 1) {
+                $user = $stmt->fetch();
+                
+                if (password_verify($password, $user['password'])) {
+                    // Regenerar ID de sesión para prevenir fijación
+                    session_regenerate_id(true);
+                    
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['last_login'] = time();
+                    
+                    // Redirección con JavaScript como respaldo
+                    echo '<script>window.location.href = "dashboard.php";</script>';
+                    header("Location: dashboard.php");
+                    exit();
+                } else {
+                    $error = "Credenciales incorrectas";
+                }
             } else {
-                $error = "Contraseña incorrecta";
+                $error = "Usuario/Email no encontrado";
             }
-        } else {
-            $error = "Usuario/Email no encontrado";
+        } catch (PDOException $e) {
+            error_log("Error de base de datos: " . $e->getMessage());
+            $error = "Error del sistema. Por favor intente más tarde.";
         }
     } else {
-        $error = "Por favor, complete todos los campos.";
+        $error = "Por favor complete todos los campos";
     }
 }
 ?>
@@ -56,15 +81,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="login-box">
                 <h1>Sistema de Tickets de Soporte</h1>
 
-                <!-- Mostrar error si las credenciales son incorrectas -->
                 <?php if (isset($error)): ?>
-                    <p style="color: red;"><?php echo $error; ?></p>
+                    <div class="error-message" style="color: red; margin-bottom: 15px;">
+                        <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
                 <?php endif; ?>
 
-                <form class="login-form" method="POST">
+                <form class="login-form" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                     <div class="form-group">
                         <label for="email_or_username">Usuario o Correo electrónico:</label>
-                        <input type="text" id="email_or_username" name="email_or_username" required>
+                        <input type="text" id="email_or_username" name="email_or_username" required autofocus>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
@@ -92,6 +118,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 themeButton.textContent = 'Modo Oscuro';
             }
+        });
+        
+        // Limpiar mensajes de error al empezar a escribir
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                const errorMsg = document.querySelector('.error-message');
+                if (errorMsg) errorMsg.style.display = 'none';
+            });
         });
     </script>
 </body>
