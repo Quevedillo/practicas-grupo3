@@ -1,39 +1,3 @@
-<?php
-session_start();
-include("database.php"); // Incluir el archivo de conexión PDO
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['login_input']) && isset($_POST['password'])) {  // Cambiado a login_input
-        $login_input = $_POST['login_input'];  // Puede ser email o username
-        $password = $_POST['password'];  // Obtener contraseña del formulario
-
-        // Usar PDO para hacer la consulta
-        $sql = "SELECT * FROM users WHERE email = :login OR username = :login";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':login', $login_input, PDO::PARAM_STR);  // Vincular el input
-        $stmt->execute();
-
-        // Verificar si el usuario existe
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch();  // Obtener los datos del usuario
-            if (password_verify($password, $user['password'])) {
-                // Si la contraseña es correcta, iniciar sesión
-                $_SESSION['id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                header("Location: dashboard.php");  // Redirigir al dashboard
-                exit();
-            } else {
-                $error = "Contraseña incorrecta";
-            }
-        } else {
-            $error = "Usuario no encontrado";
-        }
-    } else {
-        $error = "Por favor, complete todos los campos.";
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -57,7 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="login-box">
                 <h1>Sistema de Tickets de Soporte</h1>
 
-                <!-- Mostrar error si las credenciales son incorrectas -->
                 <?php if (isset($error)): ?>
                     <p style="color: red;"><?php echo $error; ?></p>
                 <?php endif; ?>
@@ -82,7 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-        // Script para cambiar entre modo oscuro y modo claro
         const themeButton = document.getElementById('theme-button');
         const body = document.body;
 
