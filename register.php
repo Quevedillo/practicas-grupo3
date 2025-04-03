@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("database.php");
 
 // Procesar el formulario de registro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
