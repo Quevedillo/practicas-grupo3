@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </form>
                 <div class="links">
                     <a href="recuperarcontraseña.php">¿Olvidó su contraseña?</a>
-                    <a href="#">Registrarse</a>
+                    <a href="register.php">Registrarse</a>
                 </div>
             </div>
         </main>
