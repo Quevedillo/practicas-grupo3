@@ -94,7 +94,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $ticket['id']; ?></td>
                             <td><?php echo $ticket['title']; ?></td>
                             <td><?php echo $ticket['description']; ?></td>
-                            <td><?php echo $ticket['Prioridad']; ?></td>
+                            <td><?php echo $ticket['priority']; ?></td>
                             <td><?php echo $ticket['status']; ?></td>
                             <td><?php echo $ticket['created_at']; ?></td>
                             <td><?php echo $ticket['updated_at']; ?></td>
