@@ -7,7 +7,7 @@
         exit();
     }
     
-    require 'config/database.php';
+    require 'database.php';
 // fin crear conexion (fvalencia)
 ?>
 <!DOCTYPE html>
