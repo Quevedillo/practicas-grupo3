@@ -70,7 +70,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p><?php echo count($tickets); ?></p>
                     </div>
                 </div>
-                <button class="new-ticket-button">+ Nuevo Ticket</button>
+                <button class="new-ticket-button"><a href="crearTicket.php">+ Nuevo Ticket</a></button>
             </div>
 
             <div class="recent-tickets">
