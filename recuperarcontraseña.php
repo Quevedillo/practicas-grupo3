@@ -1,18 +1,6 @@
 <?php
 session_start();
-
-// Configuración de la base de datos
-$host = 'localhost';
-$dbname = 'ticket';
-$user = 'root';
-$pass = '';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
+include("database.php");
 
 // Manejo del formulario de solicitud de recuperación
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
