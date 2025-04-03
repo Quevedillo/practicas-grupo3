@@ -1,6 +1,14 @@
 <?php
-require_once 'includes/db_connection.php'; // Conexión a la base de datos
-require_once 'includes/auth.php'; // Manejo de autenticación
+session_start(); // Manejo de autenticación
+require 'database.php'; // Asegúrate de que este archivo contenga la conexión correcta a la base de datos
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['id']; // Obtener el user_id de la sesión
 
 // Si se envió el formulario, procesar el ticket
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -18,22 +26,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if (move_uploaded_file($_FILES["attachment"]["tmp_name"], $target_file)) {
             $attachment_path = $target_file;
+        } else {
+            echo "Error al subir el archivo.";
+            exit();
         }
     }
 
-    // Insertar el ticket en la base de datos
-    $stmt = $conn->prepare("INSERT INTO tickets (user_id, title, category, priority, description, attachment, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-    $stmt->bind_param("isssss", $user_id, $title, $category, $priority, $description, $attachment_path);
+    // Inserción del ticket en la base de datos usando PDO
+    try {
+        $stmt = $pdo->prepare("INSERT INTO tickets (user_id, title, category, priority, description, attachment, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->execute([$user_id, $title, $category, $priority, $description, $attachment_path]);
 
-    if ($stmt->execute()) {
-        header("Location: index.php"); // Redirigir a index.php después de crear el ticket
+        // Redirigir al usuario después de crear el ticket
+        header("Location: index.php");
         exit();
-    } else {
-        echo "Error al crear el ticket.";
+    } catch (PDOException $e) {
+        echo "Error al crear el ticket: " . $e->getMessage();
     }
 }
-
-// Obtener información del usuario (para mostrar en la interfaz)
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <button id="theme-button">Modo Oscuro</button>
                 </div>
                 <div class="user-menu">
-                    <span><?php echo htmlspecialchars($user['username']); ?> ▼</span>
+                    <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                 </div>
             </div>
         </header>
@@ -103,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="file" id="attachment" name="attachment">
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="cancel-button" onclick="window.location.href='index.php'">Cancelar</button>
+                        <button type="button" class="cancel-button" onclick="window.location.href='dashboard.php'">Cancelar</button>
                         <button type="submit" class="create-ticket-button">Crear Ticket</button>
                     </div>
                 </form>
