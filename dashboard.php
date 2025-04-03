@@ -89,7 +89,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($ticket = $tickets->fetch_assoc()) {?>
+                    <?php foreach ($tickets as $ticket) {?>
                         <tr>
                             <td><?php echo $ticket['id']; ?></td>
                             <td><?php echo $ticket['title']; ?></td>
