@@ -1,5 +1,5 @@
 <?php
-// index.php
+
 
 session_start(); // Iniciar sesión
 include("database.php");
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="login-button">Iniciar Sesión</button>
                 </form>
                 <div class="links">
-                    <a href="#">¿Olvidó su contraseña?</a>
+                    <a href="recuperarcontraseña.php">¿Olvidó su contraseña?</a>
                     <a href="#">Registrarse</a>
                 </div>
             </div>
