@@ -3,14 +3,14 @@ session_start();
 include("database.php"); // Incluir el archivo de conexión PDO
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['email']) && isset($_POST['password'])) {  // Verificar si los datos están presentes
-        $email = $_POST['email'];  // Obtener email del formulario
+    if (isset($_POST['login_input']) && isset($_POST['password'])) {  // Cambiado a login_input
+        $login_input = $_POST['login_input'];  // Puede ser email o username
         $password = $_POST['password'];  // Obtener contraseña del formulario
 
         // Usar PDO para hacer la consulta
-        $sql = "SELECT * FROM users WHERE email = :email";
+        $sql = "SELECT * FROM users WHERE email = :login OR username = :login";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);  // Vincular el email
+        $stmt->bindParam(':login', $login_input, PDO::PARAM_STR);  // Vincular el input
         $stmt->execute();
 
         // Verificar si el usuario existe
@@ -23,13 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: index.php");  // Redirigir al dashboard
                 exit();
             } else {
-                echo "Contraseña incorrecta";
+                $error = "Contraseña incorrecta";
             }
         } else {
-            echo "Usuario no encontrado";
+            $error = "Usuario no encontrado";
         }
     } else {
-        echo "Por favor, complete todos los campos.";
+        $error = "Por favor, complete todos los campos.";
     }
 }
 ?>
@@ -64,8 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <form class="login-form" method="POST">
                     <div class="form-group">
-                        <label for="email">Correo electrónico:</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="login_input">Usuario o Correo electrónico:</label>
+                        <input type="text" id="login_input" name="login_input" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
