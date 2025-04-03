@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Si la contraseña es correcta, iniciar sesión
                 $_SESSION['id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                header("Location: index.php");  // Redirigir al dashboard
+                header("Location: dashboard.php");  // Redirigir al dashboard
                 exit();
             } else {
                 $error = "Contraseña incorrecta";
