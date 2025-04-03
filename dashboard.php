@@ -48,7 +48,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <nav class="navbar">
             <ul>
-                <li><a href="#">Panel</a></li>
+                <li><a href="dashboard.php">Panel</a></li>
                 <li><a href="#">Mis Tickets</a></li>
                 <li><a href="#">Perfil</a></li>
                 <li><a href="clienteTecnico.php">Comunicación</a></li>
