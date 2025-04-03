@@ -2,6 +2,7 @@
 // index.php
 
 session_start(); // Iniciar sesión
+include("database.php");
 
 // Verificar si el usuario ya está autenticado
 if (isset($_SESSION['user_id'])) {
@@ -10,17 +11,17 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // Procesar el formulario de login
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // Validar credenciales
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = :username");
+    $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, hash: $user['password'])) {
+    if ($user && password_verify($password, $user['password'])) {
         // Autenticación exitosa
         $_SESSION['user_id'] = $user['id'];
         header('Location: dashboard.php');
@@ -52,7 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <main class="main-content">
             <div class="login-box">
                 <h1>Sistema de Tickets de Soporte</h1>
-                <form class="login-form">
+                
+                <!-- Mostrar error si las credenciales son incorrectas -->
+                <?php if (isset($error)): ?>
+                    <p style="color: red;"><?php echo $error; ?></p>
+                <?php endif; ?>
+
+                <form class="login-form" method="POST">
                     <div class="form-group">
                         <label for="username">Usuario:</label>
                         <input type="text" id="username" name="username" required>
