@@ -1,12 +1,14 @@
 <?php
+// crear conexion (fvalencia)
     session_start();
 
     if (!isset($_SESSION['user_id'])) {
-        header('Location: index.php');
+        header('Location: login.php');
         exit();
     }
     
     require 'config/database.php';
+// fin crear conexion (fvalencia)
 ?>
 <!DOCTYPE html>
 <html lang="es">
