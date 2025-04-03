@@ -1,19 +1,19 @@
 <?php
-// Configuración inicial de sesión más estricta
+// Inicio de sesión con configuración segura
 session_start([
-    'cookie_lifetime' => 86400, // 1 día
-    'cookie_secure'   => isset($_SERVER['HTTPS']), // Solo enviar cookies sobre HTTPS
-    'cookie_httponly' => true, // Prevenir acceso a cookies via JavaScript
-    'use_strict_mode' => true // Mejor seguridad para IDs de sesión
+    'cookie_lifetime' => 86400, // 1 día de duración
+    'cookie_secure' => isset($_SERVER['HTTPS']), // Solo HTTPS si está disponible
+    'cookie_httponly' => true, // Protección contra XSS
+    'use_strict_mode' => true // Mayor seguridad
 ]);
 
 include("database.php");
 
-// Limpiar cualquier sesión existente si llegan a la página de login
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_SESSION['user_id'])) {
-    unset($_SESSION['user_id']);
-    unset($_SESSION['username']);
-    session_regenerate_id(true);
+// Limpiar sesión si acceden al login estando logueados
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_SESSION['id'])) {
+    session_unset();
+    session_destroy();
+    session_start();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,28 +22,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = $_POST['password'];
 
         try {
-            $sql = "SELECT * FROM users WHERE email = :email_or_username OR username = :email_or_username";
+            $sql = "SELECT id, username, password FROM users WHERE email = :credential OR username = :credential";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':email_or_username', $email_or_username, PDO::PARAM_STR);
+            $stmt->bindParam(':credential', $email_or_username, PDO::PARAM_STR);
             $stmt->execute();
 
             if ($stmt->rowCount() === 1) {
                 $user = $stmt->fetch();
                 
                 if (password_verify($password, $user['password'])) {
-                    // Regenerar ID de sesión para prevenir fijación
+                    // Regenerar ID de sesión por seguridad
                     session_regenerate_id(true);
                     
-                    $_SESSION['user_id'] = $user['id'];
+                    // Establecer variables de sesión (usando 'id' como en dashboard.php)
+                    $_SESSION['id'] = $user['id']; // Clave compatible con dashboard
                     $_SESSION['username'] = $user['username'];
-                    $_SESSION['last_login'] = time();
                     
                     // Redirección con JavaScript como respaldo
                     echo '<script>window.location.href = "dashboard.php";</script>';
                     header("Location: dashboard.php");
                     exit();
                 } else {
-                    $error = "Credenciales incorrectas";
+                    $error = "Contraseña incorrecta";
                 }
             } else {
                 $error = "Usuario/Email no encontrado";
