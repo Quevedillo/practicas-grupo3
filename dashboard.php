@@ -1,15 +1,24 @@
 <?php
-// crear conexion (fvalencia)
-    session_start();
+// Iniciar la sesión para verificar si el usuario está autenticado
+session_start();
 
-    if (!isset($_SESSION['id'])) {
-        header('Location: login.php');
-        exit();
-    }
-    
-    require 'database.php';
-// fin crear conexion (fvalencia)
+// Verificar si la sesión está iniciada, de lo contrario redirigir al login
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+// Incluir el archivo de la base de datos (asumiendo que contiene la conexión a la base de datos)
+require 'database.php';
+
+// Consulta para obtener los tickets
+$sql = "SELECT * FROM tickets WHERE user_id = :user_id"; // Asegúrate de personalizar esta consulta a tu esquema
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['user_id' => $_SESSION['id']]);
+$tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -72,23 +81,25 @@
                         <tr>
                             <th>ID</th>
                             <th>Título</th>
+                            <th>Descripcion</th>
+                            <th>Prioridad</th>
                             <th>Estado</th>
-                            <th>Fecha</th>
+                            <th>Fecha de creación</th>
+                            <th>Fecha actualización</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php while ($ticket = $tickets->fetch_assoc()) {?>
                         <tr>
-                            <td>1</td>
-                            <td>Problema con el software</td>
-                            <td><span class="status open">Abierto</span></td>
-                            <td>2023-10-01</td>
+                            <td><?php echo $ticket['id']; ?></td>
+                            <td><?php echo $ticket['title']; ?></td>
+                            <td><?php echo $ticket['description']; ?></td>
+                            <td><?php echo $ticket['Prioridad']; ?></td>
+                            <td><?php echo $ticket['status']; ?></td>
+                            <td><?php echo $ticket['created_at']; ?></td>
+                            <td><?php echo $ticket['updated_at']; ?></td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Error en la red</td>
-                            <td><span class="status resolved">Resuelto</span></td>
-                            <td>2023-10-02</td>
-                        </tr>
+                        <?php }?>
                     </tbody>
                 </table>
             </div>
