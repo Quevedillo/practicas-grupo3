@@ -1,36 +1,39 @@
 <?php
+session_start();
+include("database.php"); // Incluir el archivo de conexión PDO
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['email']) && isset($_POST['password'])) {  // Verificar si los datos están presentes
+        $email = $_POST['email'];  // Obtener email del formulario
+        $password = $_POST['password'];  // Obtener contraseña del formulario
 
-session_start(); // Iniciar sesión
-include("database.php");
+        // Usar PDO para hacer la consulta
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);  // Vincular el email
+        $stmt->execute();
 
-// Verificar si el usuario ya está autenticado
-if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php'); // Redirigir al dashboard
-    exit();
-}
-
-// Procesar el formulario de login
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Validar credenciales
-    $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = :username");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user && password_verify($password, $user['password'])) {
-        // Autenticación exitosa
-        $_SESSION['user_id'] = $user['id'];
-        header('Location: dashboard.php');
-        exit();
+        // Verificar si el usuario existe
+        if ($stmt->rowCount() > 0) {
+            $user = $stmt->fetch();  // Obtener los datos del usuario
+            if (password_verify($password, $user['password'])) {
+                // Si la contraseña es correcta, iniciar sesión
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                header("Location: index.php");  // Redirigir al dashboard
+                exit();
+            } else {
+                echo "Contraseña incorrecta";
+            }
+        } else {
+            echo "Usuario no encontrado";
+        }
     } else {
-        $error = "Usuario o contraseña incorrectos.";
+        echo "Por favor, complete todos los campos.";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <main class="main-content">
             <div class="login-box">
                 <h1>Sistema de Tickets de Soporte</h1>
-                
+
                 <!-- Mostrar error si las credenciales son incorrectas -->
                 <?php if (isset($error)): ?>
                     <p style="color: red;"><?php echo $error; ?></p>
@@ -61,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <form class="login-form" method="POST">
                     <div class="form-group">
-                        <label for="username">Usuario:</label>
-                        <input type="text" id="username" name="username" required>
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
