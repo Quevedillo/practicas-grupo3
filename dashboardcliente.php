@@ -1,3 +1,13 @@
+<?php
+    session_start();
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: index.php');
+        exit();
+    }
+    
+    require 'config/database.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -36,7 +46,7 @@
                 <div class="summary-cards">
                     <div class="card">
                         <h3>Tickets Abiertos</h3>
-                        <p>5</p>
+                        <p><?php ?></p>
                     </div>
                     <div class="card">
                         <h3>Tickets Resueltos</h3>
