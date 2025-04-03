@@ -18,7 +18,6 @@ $stmt->execute(['user_id' => $_SESSION['id']]);
 $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -48,10 +47,9 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <nav class="navbar">
             <ul>
-                <li><a href="dashboard.php">Panel</a></li>
+                <li><a href="#">Panel</a></li>
                 <li><a href="#">Mis Tickets</a></li>
-                <li><a href="gestion_usuario.php">Perfil</a></li>
-                <li><a href="clienteTecnico.php">Comunicación</a></li>
+                <li><a href="#">Perfil</a></li>
             </ul>
         </nav>
 
@@ -61,15 +59,15 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="summary-cards">
                     <div class="card">
                         <h3>Tickets Abiertos</h3>
-                        <p><?php ?></p>
+                        <p><?php echo count(array_filter($tickets, function($ticket) { return $ticket['status'] == 'open' || $ticket['status'] == 'in_progress'; })); ?></p>
                     </div>
                     <div class="card">
                         <h3>Tickets Resueltos</h3>
-                        <p>10</p>
+                        <p><?php echo count(array_filter($tickets, function($ticket) { return $ticket['status'] == 'resolved' || $ticket['status'] == 'closed'; })); ?></p>
                     </div>
                     <div class="card">
                         <h3>Total Tickets</h3>
-                        <p>15</p>
+                        <p><?php echo count($tickets); ?></p>
                     </div>
                 </div>
                 <button class="new-ticket-button">+ Nuevo Ticket</button>
@@ -90,7 +88,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($tickets as $ticket) {?>
+                        <?php foreach ($tickets as $ticket) { ?>
                         <tr>
                             <td><?php echo $ticket['id']; ?></td>
                             <td><?php echo $ticket['title']; ?></td>
@@ -100,7 +98,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $ticket['created_at']; ?></td>
                             <td><?php echo $ticket['updated_at']; ?></td>
                         </tr>
-                        <?php }?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
