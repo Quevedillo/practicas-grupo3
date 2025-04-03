@@ -1,20 +1,6 @@
 <?php
 session_start();
 
-// Configuración de la base de datos
-$host = 'localhost';
-$dbname = 'ticket';
-$user = 'root';
-$pass = '';
-
-// Conexión a la base de datos
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
-
 // Procesar el formulario de registro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
