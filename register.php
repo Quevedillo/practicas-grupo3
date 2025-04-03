@@ -5,10 +5,9 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $email = $_POST['email'];
 
     // Validar que los campos no estén vacíos
-    if (empty($username) || empty($password) || empty($email)) {
+    if (empty($username) || empty($password)) {
         $error_message = "Todos los campos son obligatorios.";
     } else {
         // Hash de la contraseña
@@ -16,11 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Insertar el nuevo usuario en la base de datos
         try {
-            $stmt = $pdo->prepare("INSERT INTO users (username, password, email) VALUES (:username, :password, :email)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
             $stmt->execute([
                 'username' => $username,
-                'password' => $hashed_password,
-                'email' => $email
+                'password' => $hashed_password
             ]);
             $success_message = "Registro exitoso. Ahora puedes iniciar sesión.";
         } catch (PDOException $e) {
@@ -66,10 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
                         <input type="password" id="password" name="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo electrónico:</label>
-                        <input type="email" id="email" name="email" required>
                     </div>
                     <button type="submit" class="login-button">Registrarse</button>
                 </form>
