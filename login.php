@@ -3,33 +3,32 @@ session_start();
 include("database.php"); // Incluir el archivo de conexión PDO
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['email']) && isset($_POST['password'])) {  // Verificar si los datos están presentes
-        $email = $_POST['email'];  // Obtener email del formulario
+    if (isset($_POST['email_or_username']) && isset($_POST['password'])) {  // Verificar si los datos están presentes
+        $email_or_username = $_POST['email_or_username'];  // Puede ser email o nombre de usuario
         $password = $_POST['password'];  // Obtener contraseña del formulario
 
-        // Usar PDO para hacer la consulta
-        $sql = "SELECT * FROM users WHERE email = :email";
+        // Usar PDO para hacer la consulta (busca por email o username)
+        $sql = "SELECT * FROM users WHERE email = :email_or_username OR username = :email_or_username";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);  // Vincular el email
+        $stmt->bindParam(':email_or_username', $email_or_username, PDO::PARAM_STR);  // Vincular el parámetro
         $stmt->execute();
 
         // Verificar si el usuario existe
         if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch();  // Obtener los datos del usuario
+            $user = $stmt->fetch();
             if (password_verify($password, $user['password'])) {
-                // Si la contraseña es correcta, iniciar sesión
-                $_SESSION['id'] = $user['id'];
+                $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
-                header("Location: dashboard.php");  // Redirigir al dashboard
+                header("Location: dashboard.php");
                 exit();
             } else {
-                echo "Contraseña incorrecta";
+                $error = "Contraseña incorrecta";
             }
         } else {
-            echo "Usuario no encontrado";
+            $error = "Usuario/Email no encontrado";
         }
     } else {
-        echo "Por favor, complete todos los campos.";
+        $error = "Por favor, complete todos los campos.";
     }
 }
 ?>
@@ -64,8 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <form class="login-form" method="POST">
                     <div class="form-group">
-                        <label for="email">Correo electrónico:</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="email_or_username">Usuario o Correo electrónico:</label>
+                        <input type="text" id="email_or_username" name="email_or_username" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
