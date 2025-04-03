@@ -1,14 +1,14 @@
 <?php
 session_start();
-include("database.php");
 
 // Procesar el formulario de registro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
-
+    $email = $_POST['email'];
+    
     // Validar que los campos no estén vacíos
-    if (empty($username) || empty($password)) {
+    if (empty($username) || empty($password) || empty($email)) {
         $error_message = "Todos los campos son obligatorios.";
     } else {
         // Hash de la contraseña
@@ -16,10 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Insertar el nuevo usuario en la base de datos
         try {
-            $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, password, email) VALUES (:username, :password, :email)");
             $stmt->execute([
                 'username' => $username,
-                'password' => $hashed_password
+                'password' => $hashed_password,
+                'email' => $email
             ]);
             $success_message = "Registro exitoso. Ahora puedes iniciar sesión.";
         } catch (PDOException $e) {
@@ -66,6 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="password">Contraseña:</label>
                         <input type="password" id="password" name="password" required>
                     </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
                     <button type="submit" class="login-button">Registrarse</button>
                 </form>
                 <div class="links">
@@ -90,4 +95,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     </script>
 </body>
-</html>
+</html> 
