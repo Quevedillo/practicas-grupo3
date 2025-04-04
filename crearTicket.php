@@ -109,9 +109,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <nav class="navbar">
             <ul>
-                <li><a href="dashboard.php">Inicio</a></li>
+                <li><a href="dashboard.php" class="active">Panel</a></li>
                 <li><a href="misTickets.php">Mis Tickets</a></li>
-                <li><a href="logout.php">Cerrar Sesión</a></li>
+                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
 
