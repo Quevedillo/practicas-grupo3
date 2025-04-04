@@ -89,10 +89,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group">
                         <label for="category">Categoría:</label>
                         <select id="category" name="category" required>
-                            <option value="hardware">Hardware</option>
-                            <option value="software">Software</option>
-                            <option value="network">Red</option>
-                            <option value="other">Otros</option>
+                            <option value="1">Hardware</option>
+                            <option value="2">Software</option>
+                            <option value="3">Red</option>
+                            <option value="4">Otros</option>
                         </select>
                     </div>
                     <div class="form-group">
