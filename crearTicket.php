@@ -22,23 +22,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!empty($_FILES['attachment']['name'])) {
-        $upload_dir = "uploads/"; // Carpeta donde se guardará el archivo
-
-        // Verificar si la carpeta 'uploads/' existe, si no, crearla
+        $upload_dir = "uploads/";
+    
+        // Verifica si la carpeta de carga existe, si no, la crea
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true); // Crear la carpeta con permisos de escritura
+            if (!mkdir($upload_dir, 0777, true)) {
+                echo "Error al crear la carpeta de subida.";
+                exit();
+            }
         }
-
+    
         $filename = basename($_FILES["attachment"]["name"]);
-        $target_file = $upload_dir . time() . "_" . $filename; // Nombre final con prefijo de tiempo
-
+        $target_file = $upload_dir . time() . "_" . $filename;
+        
         if (move_uploaded_file($_FILES["attachment"]["tmp_name"], $target_file)) {
-            $attachment_path = $target_file; // Si la carga es exitosa, guarda la ruta
+            $attachment_path = $target_file;
         } else {
             echo "Error al subir el archivo.";
             exit();
         }
     }
+    
 
     try {
         $pdo->beginTransaction();
@@ -60,27 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error al crear el ticket: " . $e->getMessage();
     }
 }
-
-
-    try {
-        $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO tickets (user_id, category_id, title, description, priority, status, created_at) VALUES (?, ?, ?, ?, ?, 'open', NOW())");
-        $stmt->execute([$user_id, $category_id, $title, $description, $priority]);
-
-        $ticket_id = $pdo->lastInsertId();
-
-        if ($attachment_path) {
-            $stmt = $pdo->prepare("INSERT INTO attachments (ticket_id, filename, filepath, filesize) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$ticket_id, $filename, $attachment_path, $_FILES['attachment']['size']]);
-        }
-
-        $pdo->commit();
-        header("Location: dashboard.php");
-        exit();
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        echo "Error al crear el ticket: " . $e->getMessage();
-    }
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </header>
 
         <nav class="navbar">
-            <ul>
+        <ul>
                 <li><a href="dashboard.php" class="active">Panel</a></li>
                 <li><a href="misTickets.php">Mis Tickets</a></li>
                 <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
