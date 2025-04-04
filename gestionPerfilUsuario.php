@@ -94,20 +94,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
                 <?php endif; ?>
                 <form method="POST" action="gestionPerfilUsuario.php" class="profile-form" onsubmit="return validarFormulario()">
-                    <label for="username">Nombre de Usuario:</label>
-                    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
-
-                    <label for="email">Correo Electrónico:</label>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-
-                    <label for="password">Nueva Contraseña (opcional):</label>
-                    <input type="password" id="password" name="password" placeholder="Deja en blanco si no deseas cambiarla">
-
-                    <label for="confirm_password">Confirmar Contraseña:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Repite la nueva contraseña">
-
-                    <button type="submit">Actualizar Perfil</button>
-                </form>
+    <div class="form-group">
+        <label for="username">Nombre de Usuario:</label>
+        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Nueva Contraseña (opcional):</label>
+        <input type="password" id="password" name="password" placeholder="Deja en blanco si no deseas cambiarla">
+    </div>
+    
+    <div class="form-group">
+        <label for="confirm_password">Confirmar Contraseña:</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Repite la nueva contraseña">
+    </div>
+    
+    <div class="form-group">
+        <button type="submit">Actualizar Perfil</button>
+    </div>
+</form>
             </div>
         </main>
     </div>
