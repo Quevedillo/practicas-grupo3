@@ -43,7 +43,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav class="navbar">
             <ul>
                 <li><a href="dashboard.php" class="active">Panel</a></li>
-                <li><a href="misTickets.php">Mis Tickets</a></li>
+                <li><a href="misTickets.php">Miop</a></li>
                 <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
                 <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
