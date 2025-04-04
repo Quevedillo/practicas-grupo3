@@ -35,7 +35,7 @@ require 'database.php';
         <nav class="navbar">
             <ul>
                 <li><a href="dashboard.php">Panel</a></li>
-                <li><a href="#">Mis Tickets</a></li>
+                <li><a href="misTickets.php">Mis Tickets</a></li>
                 <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
                 <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
