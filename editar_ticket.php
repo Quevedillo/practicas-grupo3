@@ -1,6 +1,14 @@
 <?php
 // Conexión a la base de datos
-$conexion = new mysqli("localhost", "usuario", "contraseña", "base_de_datos");
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+require 'database.php';
+
 
 // Verificar conexión
 if ($conexion->connect_error) {
