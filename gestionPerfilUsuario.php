@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button id="theme-button">Modo Oscuro</button>
                 </div>
                 <div class="user-menu">
-                    <span>USUARIO ▼</span>
+                <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                     <div class="user-dropdown">
                         <a href="logout.php">Cerrar Sesión</a>
                     </div>
