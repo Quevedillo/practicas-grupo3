@@ -1,22 +1,17 @@
 <?php
-// Iniciar la sesión para verificar si el usuario está autenticado
 session_start();
 
-// Verificar si la sesión está iniciada, de lo contrario redirigir al login
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
     exit();
 }
 
-// Incluir el archivo de la base de datos (asumiendo que contiene la conexión a la base de datos)
 require 'database.php';
 
-// Consulta para obtener los tickets
-$sql = "SELECT * FROM tickets WHERE user_id = :user_id"; // Asegúrate de personalizar esta consulta a tu esquema
+$sql = "SELECT * FROM tickets WHERE user_id = :user_id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['user_id' => $_SESSION['id']]);
 $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -47,10 +42,10 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <nav class="navbar">
             <ul>
-                <li><a href="#">Panel</a></li>
+                <li><a href="#" class="active">Panel</a></li>
                 <li><a href="#">Mis Tickets</a></li>
                 <li><a href="#">Perfil</a></li>
-                <li><a href="clienteTecnico.php">Comunicacion</a></li>
+                <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
 
@@ -60,11 +55,15 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="summary-cards">
                     <div class="card">
                         <h3>Tickets Abiertos</h3>
-                        <p><?php echo count(array_filter($tickets, function($ticket) { return $ticket['status'] == 'open' || $ticket['status'] == 'in_progress'; })); ?></p>
+                        <p><?php echo count(array_filter($tickets, function($ticket) { 
+                            return $ticket['status'] == 'open' || $ticket['status'] == 'in_progress'; 
+                        })); ?></p>
                     </div>
                     <div class="card">
                         <h3>Tickets Resueltos</h3>
-                        <p><?php echo count(array_filter($tickets, function($ticket) { return $ticket['status'] == 'resolved' || $ticket['status'] == 'closed'; })); ?></p>
+                        <p><?php echo count(array_filter($tickets, function($ticket) { 
+                            return $ticket['status'] == 'resolved' || $ticket['status'] == 'closed'; 
+                        })); ?></p>
                     </div>
                     <div class="card">
                         <h3>Total Tickets</h3>
@@ -76,12 +75,13 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="recent-tickets">
                 <h2>Tickets Recientes</h2>
+                <?php if (count($tickets) > 0): ?>
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Título</th>
-                            <th>Descripcion</th>
+                            <th>Descripción</th>
                             <th>Prioridad</th>
                             <th>Estado</th>
                             <th>Fecha de creación</th>
@@ -89,35 +89,49 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($tickets as $ticket) { ?>
+                        <?php foreach ($tickets as $ticket): ?>
                         <tr>
-                            <td><?php echo $ticket['id']; ?></td>
-                            <td><?php echo $ticket['title']; ?></td>
-                            <td><?php echo $ticket['description']; ?></td>
-                            <td><?php echo $ticket['priority']; ?></td>
-                            <td><?php echo $ticket['status']; ?></td>
-                            <td><?php echo $ticket['created_at']; ?></td>
-                            <td><?php echo $ticket['updated_at']; ?></td>
+                            <td><?php echo htmlspecialchars($ticket['id']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['title']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['description']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['priority']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['status']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['created_at']); ?></td>
+                            <td><?php echo htmlspecialchars($ticket['updated_at']); ?></td>
                         </tr>
-                        <?php } ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
+                <?php else: ?>
+                <p>No hay tickets registrados.</p>
+                <?php endif; ?>
             </div>
         </main>
     </div>
 
     <script>
-        // Script para cambiar entre modo oscuro y modo claro
-        const themeButton = document.getElementById('theme-button');
-        const body = document.body;
-
-        themeButton.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeButton = document.getElementById('theme-button');
+            const body = document.body;
+            
+            // Check for saved theme preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
                 themeButton.textContent = 'Modo Claro';
-            } else {
-                themeButton.textContent = 'Modo Oscuro';
             }
+            
+            themeButton.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                
+                if (isDarkMode) {
+                    themeButton.textContent = 'Modo Claro';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    themeButton.textContent = 'Modo Oscuro';
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
         });
     </script>
 </body>
