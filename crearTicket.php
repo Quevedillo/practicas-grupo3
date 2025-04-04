@@ -22,12 +22,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!empty($_FILES['attachment']['name'])) {
-        $upload_dir = "uploads/";
+        $upload_dir = "uploads/"; // Carpeta donde se guardará el archivo
+
+        // Verificar si la carpeta 'uploads/' existe, si no, crearla
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true); // Crear la carpeta con permisos de escritura
+        }
+
         $filename = basename($_FILES["attachment"]["name"]);
-        $target_file = $upload_dir . time() . "_" . $filename;
-        
+        $target_file = $upload_dir . time() . "_" . $filename; // Nombre final con prefijo de tiempo
+
         if (move_uploaded_file($_FILES["attachment"]["tmp_name"], $target_file)) {
-            $attachment_path = $target_file;
+            $attachment_path = $target_file; // Si la carga es exitosa, guarda la ruta
         } else {
             echo "Error al subir el archivo.";
             exit();
@@ -54,6 +60,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error al crear el ticket: " . $e->getMessage();
     }
 }
+
+
+    try {
+        $pdo->beginTransaction();
+        $stmt = $pdo->prepare("INSERT INTO tickets (user_id, category_id, title, description, priority, status, created_at) VALUES (?, ?, ?, ?, ?, 'open', NOW())");
+        $stmt->execute([$user_id, $category_id, $title, $description, $priority]);
+
+        $ticket_id = $pdo->lastInsertId();
+
+        if ($attachment_path) {
+            $stmt = $pdo->prepare("INSERT INTO attachments (ticket_id, filename, filepath, filesize) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$ticket_id, $filename, $attachment_path, $_FILES['attachment']['size']]);
+        }
+
+        $pdo->commit();
+        header("Location: dashboard.php");
+        exit();
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        echo "Error al crear el ticket: " . $e->getMessage();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -83,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <nav class="navbar">
             <ul>
                 <li><a href="dashboard.php">Inicio</a></li>
-                <li><a href="tickets.php">Mis Tickets</a></li>
+                <li><a href="misTickets.php">Mis Tickets</a></li>
                 <li><a href="logout.php">Cerrar Sesión</a></li>
             </ul>
         </nav>
