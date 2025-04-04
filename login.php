@@ -22,7 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = $_POST['password'];
 
         try {
-            $sql = "SELECT id, username, password FROM users WHERE email = :credential OR username = :credential";
+            // Modificamos la consulta para obtener también el rol
+            $sql = "SELECT id, username, password, role FROM users WHERE email = :credential OR username = :credential";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':credential', $email_or_username, PDO::PARAM_STR);
             $stmt->execute();
@@ -34,13 +35,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Regenerar ID de sesión por seguridad
                     session_regenerate_id(true);
                     
-                    // Establecer variables de sesión (usando 'id' como en dashboard.php)
-                    $_SESSION['id'] = $user['id']; // Clave compatible con dashboard
+                    // Establecer variables de sesión
+                    $_SESSION['id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
+                    $_SESSION['role'] = $user['role']; // Almacenar el rol en la sesión
+                    
+                    // Redirección según el rol
+                    $redirect_page = ($user['role'] === 'tech') ? 'dashboardTecnico.php' : 'dashboard.php';
                     
                     // Redirección con JavaScript como respaldo
-                    echo '<script>window.location.href = "dashboard.php";</script>';
-                    header("Location: dashboard.php");
+                    echo '<script>window.location.href = "'.$redirect_page.'";</script>';
+                    header("Location: ".$redirect_page);
                     exit();
                 } else {
                     $error = "Contraseña incorrecta";
