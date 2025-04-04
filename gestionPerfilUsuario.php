@@ -8,42 +8,44 @@ if (!isset($_SESSION['id'])) {
 
 require 'database.php';
 
-// Obtener los datos actuales del usuario
 $sql = "SELECT username, email FROM users WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $_SESSION['id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Procesar formulario
 $mensaje = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nuevoUsername = trim($_POST['username']);
     $nuevoEmail = trim($_POST['email']);
     $nuevaPassword = trim($_POST['password']);
+    $confirmPassword = trim($_POST['confirm_password']);
 
     if (!empty($nuevoUsername) && !empty($nuevoEmail)) {
-        $actualizaSQL = "UPDATE users SET username = :username, email = :email";
-
-        $parametros = [
-            'username' => $nuevoUsername,
-            'email' => $nuevoEmail,
-        ];
-
-        if (!empty($nuevaPassword)) {
-            $actualizaSQL .= ", password = :password";
-            $parametros['password'] = password_hash($nuevaPassword, PASSWORD_DEFAULT);
-        }
-
-        $actualizaSQL .= " WHERE id = :id";
-        $parametros['id'] = $_SESSION['id'];
-
-        $stmt = $pdo->prepare($actualizaSQL);
-        if ($stmt->execute($parametros)) {
-            $mensaje = "Perfil actualizado correctamente.";
-            $user['username'] = $nuevoUsername;
-            $user['email'] = $nuevoEmail;
+        if (!empty($nuevaPassword) && $nuevaPassword !== $confirmPassword) {
+            $mensaje = "Las contraseñas no coinciden.";
         } else {
-            $mensaje = "Error al actualizar el perfil.";
+            $actualizaSQL = "UPDATE users SET username = :username, email = :email";
+            $parametros = [
+                'username' => $nuevoUsername,
+                'email' => $nuevoEmail,
+            ];
+
+            if (!empty($nuevaPassword)) {
+                $actualizaSQL .= ", password = :password";
+                $parametros['password'] = password_hash($nuevaPassword, PASSWORD_DEFAULT);
+            }
+
+            $actualizaSQL .= " WHERE id = :id";
+            $parametros['id'] = $_SESSION['id'];
+
+            $stmt = $pdo->prepare($actualizaSQL);
+            if ($stmt->execute($parametros)) {
+                $mensaje = "Perfil actualizado correctamente.";
+                $user['username'] = $nuevoUsername;
+                $user['email'] = $nuevoEmail;
+            } else {
+                $mensaje = "Error al actualizar el perfil.";
+            }
         }
     } else {
         $mensaje = "Nombre de usuario y correo no pueden estar vacíos.";
@@ -91,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if (!empty($mensaje)): ?>
                     <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
                 <?php endif; ?>
-                <form method="POST" action="gestionPerfilUsuario.php" class="profile-form">
+                <form method="POST" action="gestionPerfilUsuario.php" class="profile-form" onsubmit="return validarFormulario()">
                     <label for="username">Nombre de Usuario:</label>
                     <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
 
@@ -101,7 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="password">Nueva Contraseña (opcional):</label>
                     <input type="password" id="password" name="password" placeholder="Deja en blanco si no deseas cambiarla">
 
-                    <button type="submit" onclick="return confirmarGuardado()">Actualizar Perfil</button>
+                    <label for="confirm_password">Confirmar Contraseña:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Repite la nueva contraseña">
+
+                    <button type="submit">Actualizar Perfil</button>
                 </form>
             </div>
         </main>
@@ -125,7 +130,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         });
 
-        function confirmarGuardado() {
+        function validarFormulario() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== '' || confirmPassword !== '') {
+                if (password !== confirmPassword) {
+                    alert('Las contraseñas no coinciden.');
+                    return false;
+                }
+            }
+
             return confirm('¿Estás seguro de que deseas guardar los cambios?');
         }
     </script>
