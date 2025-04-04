@@ -58,7 +58,7 @@
                     </div>
                     <div class="form-group">
                         <label for="mensaje">Mensaje:</label>
-                        <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                        <textarea id="mensaje" name="mensaje" rows="5"  required style="resize: none;"></textarea>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="cancel-button">Cancelar</button>

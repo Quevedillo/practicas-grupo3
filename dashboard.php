@@ -50,6 +50,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><a href="#">Panel</a></li>
                 <li><a href="#">Mis Tickets</a></li>
                 <li><a href="#">Perfil</a></li>
+                <li><a href="clienteTecnico.php">Comunicacion</a></li>
             </ul>
         </nav>
 
