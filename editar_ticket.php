@@ -12,7 +12,7 @@ $id_ticket = $_GET['id'];
 
 // Consultar los datos actuales del ticket
 $sql = "SELECT * FROM tickets WHERE id = ?";
-$stmt = $conexion->prepare($sql);
+$stmt = $conexion->prepare($sql);A
 $stmt->bind_param("i", $id_ticket);
 $stmt->execute();
 $resultado = $stmt->get_result();
