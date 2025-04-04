@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare($actualizaSQL);
         if ($stmt->execute($parametros)) {
             $mensaje = "Perfil actualizado correctamente.";
-            // Actualizar datos para mostrar tras guardar
             $user['username'] = $nuevoUsername;
             $user['email'] = $nuevoEmail;
         } else {
@@ -102,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="password">Nueva Contraseña (opcional):</label>
                     <input type="password" id="password" name="password" placeholder="Deja en blanco si no deseas cambiarla">
 
-                    <button type="submit">Actualizar Perfil</button>
+                    <button type="submit" onclick="return confirmarGuardado()">Actualizar Perfil</button>
                 </form>
             </div>
         </main>
@@ -125,6 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 themeButton.textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
             });
         });
+
+        function confirmarGuardado() {
+            return confirm('¿Estás seguro de que deseas guardar los cambios?');
+        }
     </script>
 </body>
 </html>
