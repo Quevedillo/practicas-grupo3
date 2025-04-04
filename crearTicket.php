@@ -72,9 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <nav class="navbar">
             <ul>
-                <li><a href="index.php">Panel</a></li>
+                <li><a href="dashboard.php">Panel</a></li>
                 <li><a href="mis_tickets.php">Mis Tickets</a></li>
-                <li><a href="perfil.php">Perfil</a></li>
+                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
 
