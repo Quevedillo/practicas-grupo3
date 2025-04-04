@@ -34,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Inserción del ticket en la base de datos usando PDO
     try {
-        $stmt = $pdo->prepare("INSERT INTO tickets (user_id, title, category, priority, description, attachment, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->execute([$user_id, $title, $category, $priority, $description, $attachment_path]);
+        $stmt = $pdo->prepare("INSERT INTO tickets (user_id, category_id, title, description, priority, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->execute([$user_id, $category_id, $title, $category, $priority, $description, $attachment_path]);
 
         // Redirigir al usuario después de crear el ticket
         header("Location: index.php");
@@ -89,10 +89,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group">
                         <label for="category">Categoría:</label>
                         <select id="category" name="category" required>
-                            <option value="hardware">Hardware</option>
-                            <option value="software">Software</option>
-                            <option value="network">Red</option>
-                            <option value="other">Otros</option>
+                            <option value="1">Hardware</option>
+                            <option value="2">Software</option>
+                            <option value="3">Red</option>
+                            <option value="4">Otros</option>
                         </select>
                     </div>
                     <div class="form-group">
