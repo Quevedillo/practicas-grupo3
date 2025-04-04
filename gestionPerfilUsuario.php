@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare($actualizaSQL);
         if ($stmt->execute($parametros)) {
             $mensaje = "Perfil actualizado correctamente.";
-            // Actualizar datos para mostrar tras guardar
             $user['username'] = $nuevoUsername;
             $user['email'] = $nuevoEmail;
         } else {
@@ -96,14 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="username">Nombre de Usuario:</label>
                     <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
 
-                <label for="email">Correo Electrónico:</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
 
-                <label for="password">Nueva Contraseña (opcional):</label>
-                <input type="password" id="password" name="password" placeholder="Deja en blanco si no deseas cambiarla">
+                    <label for="password">Nueva Contraseña (opcional):</label>
+                    <input type="password" id="password" name="password" placeholder="Deja en blanco si no deseas cambiarla">
 
-                <button type="submit" onclick="return confirmarGuardado()">Actualizar Perfil</button>
-</form>
+                    <button type="submit" onclick="return confirmarGuardado()">Actualizar Perfil</button>
+                </form>
             </div>
         </main>
     </div>
@@ -124,11 +123,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
                 themeButton.textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
             });
-
-            function confirmarGuardado() {
-            return confirm('¿Estás seguro de que deseas guardar los cambios?');
-}
         });
+
+        function confirmarGuardado() {
+            return confirm('¿Estás seguro de que deseas guardar los cambios?');
+        }
     </script>
 </body>
 </html>
