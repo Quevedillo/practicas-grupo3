@@ -1,281 +1,199 @@
-/* Variables de color (consistentes con el dashboard) */
+/* estilocontacto.css - Versión corregida para centrado */
+
 :root {
+    /* Colores */
     --color-primary: #3498db;
     --color-primary-dark: #2980b9;
     --color-secondary: #2ecc71;
-    --color-secondary-dark: #27ae60;
     --color-accent: #e74c3c;
-    --color-accent-dark: #c0392b;
-    --color-text: #343a40;
-    --color-text-dark: #f8f9fa;
+    --color-text: #333333;
+    --color-text-light: #f8f9fa;
     --color-bg: #f8f9fa;
-    --color-bg-dark: #121212;
     --color-card: #ffffff;
-    --color-card-dark: #1e1e1e;
     --color-border: #dee2e6;
-    --color-border-dark: #444;
-    --color-orange: #ff8c42;
-    --color-orange-dark: #e67e22;
-    --color-primary-orange: #ff8c42;
-}
-
-/* Modo oscuro con tema naranja */
-.dark-mode {
-    --color-bg: var(--color-bg-dark);
-    --color-text: var(--color-text-dark);
-    --color-card: var(--color-card-dark);
-    --color-border: var(--color-border-dark);
-    --color-primary: var(--color-primary-orange);
-}
-
-/* Estructura base */
-body {
+    
+    /* Modo oscuro */
+    --color-dark-bg: #121212;
+    --color-dark-card: #1e1e1e;
+    --color-dark-border: #444444;
+    --color-dark-primary: #ff8c42;
+  }
+  
+  /* Estructura base mejorada */
+  body {
     font-family: 'Arial', sans-serif;
     background-color: var(--color-bg);
     color: var(--color-text);
-    transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    margin: 0;
-    line-height: 1.6;
-}
-
-.container {
-    flex: 1;
+    transition: all 0.3s ease;
+  }
+  
+  /* Contenedor principal perfectamente centrado */
+  .container {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-}
-
-/* Header */
-.header {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Header centrado */
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
     border-bottom: 2px solid var(--color-primary);
     margin-bottom: 20px;
-}
-
-.logo img {
-    max-width: 150px;
-    height: auto;
-}
-
-.header-right {
+    width: 100%;
+  }
+  
+  .logo img {
+    height: 50px;
+    width: auto;
+  }
+  
+  /* Contenido principal centrado */
+  .main-content {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 15px;
-}
-
-/* Botón de tema */
-#theme-button {
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-#theme-button:hover {
-    opacity: 0.9;
-}
-
-/* Menú de usuario */
-.user-menu {
-    position: relative;
-    cursor: pointer;
-}
-
-.user-menu span {
-    color: var(--color-primary);
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Navbar */
-.navbar {
-    margin-bottom: 30px;
-}
-
-.navbar ul {
-    display: flex;
-    list-style: none;
-    gap: 15px;
-    padding: 0;
-    margin: 0;
-}
-
-.navbar a {
-    text-decoration: none;
-    color: var(--color-primary);
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    font-size: 15px;
-}
-
-.navbar a:hover,
-.navbar a.active {
-    background-color: rgba(52, 152, 219, 0.1);
-}
-
-.dark-mode .navbar a:hover,
-.dark-mode .navbar a.active {
-    background-color: rgba(255, 140, 66, 0.1);
-}
-
-/* Formulario de contacto */
-.contact-form {
+    justify-content: center;
+    flex-grow: 1;
+    width: 100%;
+  }
+  
+  /* Formulario perfectamente centrado */
+  .contact-form {
     background-color: var(--color-card);
     border-radius: 8px;
     padding: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.contact-form h2 {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px; /* Ancho óptimo para formularios */
+    margin: 20px auto; /* Centrado vertical y horizontal */
+  }
+  
+  .contact-form h2 {
     color: var(--color-primary);
     margin-top: 0;
     margin-bottom: 25px;
     text-align: center;
     font-size: 28px;
-}
-
-.success-message {
-    color: var(--color-secondary);
-    background-color: rgba(46, 204, 113, 0.1);
-    padding: 10px 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    text-align: center;
-    border: 1px solid var(--color-secondary);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
+  }
+  
+  /* Elementos del formulario */
+  .form-group {
+    margin-bottom: 25px;
+    width: 100%;
+  }
+  
+  .form-group label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
     color: var(--color-primary);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--color-border);
     border-radius: 4px;
     font-size: 16px;
+    box-sizing: border-box;
     transition: border-color 0.3s;
-    background-color: var(--color-card);
-    color: var(--color-text);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--color-primary);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-}
-
-.dark-mode .form-group input:focus,
-.dark-mode .form-group select:focus,
-.dark-mode .form-group textarea:focus {
-    box-shadow: 0 0 0 2px rgba(255, 140, 66, 0.2);
-}
-
-.form-group textarea {
+  }
+  
+  .form-group textarea {
     min-height: 150px;
-}
-
-.form-actions {
+    resize: vertical;
+  }
+  
+  /* Botones perfectamente alineados */
+  .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 15px;
     margin-top: 30px;
-}
-
-.cancel-button {
-    background-color: #f0f0f0;
-    color: var(--color-text);
-    border: none;
-    padding: 10px 20px;
+    width: 100%;
+  }
+  
+  .cancel-button,
+  .send-message-button {
+    padding: 12px 24px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s;
-}
-
-.dark-mode .cancel-button {
-    background-color: #333;
-}
-
-.cancel-button:hover {
-    background-color: #e0e0e0;
-}
-
-.dark-mode .cancel-button:hover {
-    background-color: #444;
-}
-
-.send-message-button {
+  }
+  
+  .cancel-button {
+    background-color: #f0f0f0;
+    color: var(--color-text);
+    border: none;
+  }
+  
+  .send-message-button {
     background-color: var(--color-primary);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-.send-message-button:hover {
-    background-color: var(--color-primary-dark);
-}
-
-.dark-mode .send-message-button {
-    background-color: var(--color-orange);
-}
-
-.dark-mode .send-message-button:hover {
-    background-color: var(--color-orange-dark);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        gap: 15px;
+  }
+  
+  /* Modo oscuro */
+  body.dark-mode {
+    background-color: var(--color-dark-bg);
+    color: var(--color-text-light);
+  }
+  
+  .dark-mode .contact-form {
+    background-color: var(--color-dark-card);
+    border: 1px solid var(--color-dark-border);
+  }
+  
+  .dark-mode .form-group input,
+  .dark-mode .form-group select,
+  .dark-mode .form-group textarea {
+    background-color: #2a2a2a;
+    color: var(--color-text-light);
+    border-color: var(--color-dark-border);
+  }
+  
+  .dark-mode #theme-button,
+  .dark-mode .send-message-button {
+    background-color: var(--color-dark-primary);
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .container {
+      padding: 15px;
     }
     
-    .navbar ul {
-        flex-direction: column;
-        gap: 8px;
+    .header {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
     }
     
     .contact-form {
-        padding: 20px;
+      padding: 20px;
     }
     
     .form-actions {
-        flex-direction: column;
+      flex-direction: column;
     }
     
     .cancel-button,
     .send-message-button {
-        width: 100%;
+      width: 100%;
     }
-}
+  }
