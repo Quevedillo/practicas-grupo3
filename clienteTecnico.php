@@ -27,7 +27,7 @@ require 'database.php';
                     <button id="theme-button">Modo Oscuro</button>
                 </div>
                 <div class="user-menu">
-                    <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
+                    <span><?php echo htmlspecialchars($_SESSION['username']); ?></span>
                 </div>
             </div>
         </header>
@@ -35,8 +35,8 @@ require 'database.php';
         <nav class="navbar">
             <ul>
                 <li><a href="dashboard.php">Panel</a></li>
-                <li><a href="#">Mis Tickets</a></li>
-                <li><a href="gestion_usuario.php">Perfil</a></li>
+                <li><a href="misTickets.php">Mis Tickets</a></li>
+                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
                 <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
