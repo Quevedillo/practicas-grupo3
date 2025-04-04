@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <nav class="navbar">
             <ul>
                 <li><a href="panel_tecnico.php" class="active">Panel Técnico</a></li>
-                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="gestionPerfilTecnico.php">Editar Perfil</a></li>
             </ul>
         </nav>
 
