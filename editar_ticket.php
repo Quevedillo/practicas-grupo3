@@ -1,5 +1,4 @@
 <?php
-// Conexión a la base de datos
 session_start();
 
 if (!isset($_SESSION['id'])) {
@@ -7,27 +6,23 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-require 'database.php';
+require 'database.php';  // Asegúrate de que este archivo tenga la conexión PDO correcta
 
-
-// Verificar conexión
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+// Verificar que el 'id' del ticket se pase por la URL
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    die("El ticket no existe.");
 }
 
 // Obtener el ID del ticket desde la URL
 $id_ticket = $_GET['id'];
 
 // Consultar los datos actuales del ticket
-$sql = "SELECT * FROM tickets WHERE id = ?";
-$stmt = $conexion->prepare($sql);A
-$stmt->bind_param("i", $id_ticket);
-$stmt->execute();
-$resultado = $stmt->get_result();
+$sql = "SELECT * FROM tickets WHERE id = :id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['id' => $id_ticket]);
+$ticket = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($resultado->num_rows > 0) {
-    $ticket = $resultado->fetch_assoc();
-} else {
+if (!$ticket) {
     die("El ticket no existe.");
 }
 ?>
