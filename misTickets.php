@@ -72,6 +72,11 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
                                 <button type="submit" class="delete-button">Eliminar</button>
                             </form>
+                            <form action="editar_ticket.php" method="POST" onsubmit="return confirm('¿Estás seguro de editar este ticket?');">
+                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
+                                <button type="submit" class="delete-button">Editar</button>
+                            </form>
+
                         </td>
                     </tr>
                     <?php endforeach; ?>

@@ -1,6 +1,14 @@
 <?php
 // Conexión a la base de datos
-$conexion = new mysqli("localhost", "usuario", "contraseña", "base_de_datos");
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+require 'database.php';
+
 
 // Verificar conexión
 if ($conexion->connect_error) {
@@ -12,7 +20,7 @@ $id_ticket = $_GET['id'];
 
 // Consultar los datos actuales del ticket
 $sql = "SELECT * FROM tickets WHERE id = ?";
-$stmt = $conexion->prepare($sql);
+$stmt = $conexion->prepare($sql);A
 $stmt->bind_param("i", $id_ticket);
 $stmt->execute();
 $resultado = $stmt->get_result();
