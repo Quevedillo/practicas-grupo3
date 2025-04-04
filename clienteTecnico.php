@@ -36,7 +36,7 @@ require 'database.php';
             <ul>
                 <li><a href="dashboard.php">Panel</a></li>
                 <li><a href="#">Mis Tickets</a></li>
-                <li><a href="gestion_usuario.php">Perfil</a></li>
+                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
                 <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
