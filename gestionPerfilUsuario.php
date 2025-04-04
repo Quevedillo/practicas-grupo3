@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <ul>
                 <li><a href="dashboard.php">Panel</a></li>
                 <li><a href="misTickets.php">Mis Tickets</a></li>
-                <li><a href="gestionPerfilUsuario.php" class="active">Perfil</a></li>
+                <li><a href="gestionPerfilUsuario.php" class="active">Editar Perfil</a></li>
                 <li><a href="clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
