@@ -23,13 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'password' => $hashed_password,
                 'email' => $email
             ]);
-            $success_message = "Registro exitoso. Ahora puedes iniciar sesión.";
+
+            // Redirigir al login después del registro exitoso
+            header("Location: login.php");
+            exit();
+
         } catch (PDOException $e) {
             $error_message = "Error al registrar el usuario: " . $e->getMessage();
         }
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
