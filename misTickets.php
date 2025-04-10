@@ -73,6 +73,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <button type="submit" class="delete-button">Eliminar</button>
                             </form>
                             <a href="editar_ticket.php?id=<?php echo $ticket['id']; ?>" class="edit-button">Editar</a>
+                            <a href="ver_ticket.php?id=<?php echo $ticket['id']; ?>" class="view-button">Ver Comentarios</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
