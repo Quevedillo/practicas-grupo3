@@ -268,7 +268,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?php echo htmlspecialchars($ticket['status']); ?></td>
                             <td><?php echo $waiting_days; ?> días</td>
                             <td>
-                            <a class="btn btn-primary" href="detallesTecnico.php?id=<?php echo $ticket['id']; ?>">Detalles</a>
+                                <a class="btn btn-primary" href="detallesTecnico.php?id=<?php echo $ticket['id']; ?>">Detalles</a>
+                                <a href="ver_comentarios.php?ticket_id=<?php echo $ticket['id']; ?>" class="btn btn-secondary">Ver Comentarios</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
