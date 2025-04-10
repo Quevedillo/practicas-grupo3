@@ -75,30 +75,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
                 <p><strong>Prioridad:</strong> <?php echo htmlspecialchars($ticket['priority']); ?></p>
                 <p><strong>Estado:</strong> <?php echo htmlspecialchars($ticket['status']); ?></p>
                 <p><strong>Creado el:</strong> <?php echo htmlspecialchars($ticket['created_at']); ?></p>
+
+                <form method="POST" action="deleteTicket.php" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este ticket?');">
+                    <input type="hidden" name="ticket_id" value="<?php echo htmlspecialchars($ticket['id']); ?>">
+                    <button type="submit" class="btn btn-danger">Eliminar Ticket</button>
+                </form>
             </div>
 
             <div class="chat">
-                <h3>Historial de Comentarios</h3>
-                <div class="chat-messages">
-                    <?php if (count($comments) > 0): ?>
-                        <?php foreach ($comments as $comment): ?>
-                            <div class="chat-message">
-                                <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
-                                <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
-                                <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No hay comentarios para este ticket.</p>
-                    <?php endif; ?>
-                </div>
+    <h3>Historial de Comentarios</h3>
+    <div class="chat-messages">
+        <?php if (count($comments) > 0): ?>
+            <?php foreach ($comments as $comment): ?>
+                <div class="chat-message">
+                    <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
+                    <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
+                    <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
 
-                <!-- Formulario para agregar un nuevo comentario -->
-                <form method="POST" action="ver_comentarios.php?ticket_id=<?php echo $ticket_id; ?>" class="comment-form">
-                    <textarea name="comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
-                    <button type="submit">Agregar Comentario</button>
-                </form>
-            </div>
+                    <!-- Botón para eliminar comentario -->
+                    <form method="POST" action="deleteComment.php" style="display:inline;">
+                        <input type="hidden" name="comment_id" value="<?php echo htmlspecialchars($comment['id']); ?>">
+                        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este comentario?');" class="btn btn-danger">Eliminar Comentario</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No hay comentarios para este ticket.</p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Formulario para agregar un nuevo comentario -->
+    <form method="POST" action="ver_comentarios.php?ticket_id=<?php echo $ticket_id; ?>" class="comment-form">
+        <textarea name="comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
+        <button type="submit">Agregar Comentario</button>
+    </form>
+</div>
 
             <div class="back-button">
                 <a href="dashboardTecnico.php" class="btn btn-primary">Volver al Panel</a>
