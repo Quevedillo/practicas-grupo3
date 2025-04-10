@@ -109,6 +109,9 @@ $adjuntos->execute([$ticket_id]);
 
         <br><br>
         <button type="submit" name="actualizar">Actualizar</button>
+        <div class="back-button">
+            <a href="dashboardTecnico.php" class="btn btn-primary">Volver al Panel</a>
+        </div>
     </form>
 </body>
 </html>

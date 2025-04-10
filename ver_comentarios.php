@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
             </div>
 
             <div class="back-button">
-                <a href="panelTecnico.php" class="btn btn-primary">Volver al Panel</a>
+                <a href="dashboardTecnico.php" class="btn btn-primary">Volver al Panel</a>
             </div>
         </main>
     </div>
