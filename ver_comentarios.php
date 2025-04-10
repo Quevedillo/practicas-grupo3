@@ -19,11 +19,21 @@ if (isset($_GET['ticket_id'])) {
                                   FROM comments c
                                   JOIN users u ON c.user_id = u.id
                                   WHERE c.ticket_id = ?
-                                  ORDER BY c.created_at DESC");
+                                  ORDER BY c.created_at ASC");
     $commentStmt->execute([$ticket_id]);
     $comments = $commentStmt->fetchAll();
 } else {
     echo "Ticket no encontrado.";
+    exit();
+}
+
+// Si se envió un nuevo comentario
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
+    $new_comment = $_POST['comment'];
+    $user_id = 1; // Asumimos que el usuario está autenticado con id = 1, modificar según tu sistema de autenticación
+    $stmt = $pdo->prepare("INSERT INTO comments (ticket_id, user_id, comment) VALUES (?, ?, ?)");
+    $stmt->execute([$ticket_id, $user_id, $new_comment]);
+    header("Location: ver_comentarios.php?ticket_id=$ticket_id");
     exit();
 }
 ?>
@@ -67,23 +77,31 @@ if (isset($_GET['ticket_id'])) {
                 <p><strong>Creado el:</strong> <?php echo htmlspecialchars($ticket['created_at']); ?></p>
             </div>
 
-            <div class="comments-section">
-                <h3>Comentarios</h3>
-                <?php if (count($comments) > 0): ?>
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="comment-item">
-                            <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
-                            <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
-                            <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No hay comentarios para este ticket.</p>
-                <?php endif; ?>
+            <div class="chat">
+                <h3>Historial de Comentarios</h3>
+                <div class="chat-messages">
+                    <?php if (count($comments) > 0): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="chat-message">
+                                <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
+                                <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
+                                <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No hay comentarios para este ticket.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Formulario para agregar un nuevo comentario -->
+                <form method="POST" action="ver_comentarios.php?ticket_id=<?php echo $ticket_id; ?>" class="comment-form">
+                    <textarea name="comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
+                    <button type="submit">Agregar Comentario</button>
+                </form>
             </div>
 
             <div class="back-button">
-                <a href="dashboardTecnico.php" class="btn btn-primary">Volver al Panel</a>
+                <a href="panelTecnico.php" class="btn btn-primary">Volver al Panel</a>
             </div>
         </main>
     </div>
