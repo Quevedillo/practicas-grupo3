@@ -54,21 +54,13 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <div class="container">
-        <h2>Ticket: <?php echo htmlspecialchars($ticket['title']); ?></h2>
-        <p><strong>Descripción:</strong> <?php echo nl2br(htmlspecialchars($ticket['description'])); ?></p>
-        <p><strong>Estado:</strong> <?php echo $ticket['status']; ?> | <strong>Prioridad:</strong> <?php echo $ticket['priority']; ?></p>
-        <p><strong>Creado:</strong> <?php echo $ticket['created_at']; ?></p>
-
-        <hr>
-
-        <h3>Comentarios</h3>
-        <?php if (count($comments) > 0): ?>
-            <?php foreach ($comments as $c): ?>
-                <div class="comment-box">
-                    <p><strong><?php echo htmlspecialchars($c['username']); ?>:</strong></p>
-                    <p><?php echo nl2br(htmlspecialchars($c['comment'])); ?></p>
-                    <p><small><?php echo $c['created_at']; ?></small></p>
-                    <hr>
+        <header class="header">
+            <div class="logo">
+                <img src="https://camaradesevilla.com/wp-content/uploads/2024/07/S00-logo-Grupo-Solutia-v01-1.png" alt="Logo del Sistema">
+            </div>
+            <div class="header-right">
+                <div class="theme-toggle">
+                    <button id="theme-button">Modo Oscuro</button>
                 </div>
                 <div class="user-menu">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
@@ -79,14 +71,48 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </header>
 
-        <form method="POST">
-            <label for="comment">Agregar comentario:</label><br>
-            <textarea name="comment" id="comment" rows="4" cols="50" required></textarea><br>
-            <button type="submit">Enviar comentario</button>
-        </form>
+        <nav class="navbar">
+            <ul>
+                <li><a href="dashboard.php">Panel</a></li>
+                <li><a href="misTickets.php">Mis Tickets</a></li>
+                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="clienteTecnico.php">Comunicación</a></li>
+            </ul>
+        </nav>
 
-        <br>
-        <a href="misTickets.php">← Volver a Mis Tickets</a>
+        <main class="main-content">
+            <h2>Ticket: <?php echo htmlspecialchars($ticket['title']); ?></h2>
+            <p><strong>Descripción:</strong> <?php echo nl2br(htmlspecialchars($ticket['description'])); ?></p>
+            <p><strong>Estado:</strong> <?php echo $ticket['status']; ?> | <strong>Prioridad:</strong> <?php echo $ticket['priority']; ?></p>
+            <p><strong>Creado:</strong> <?php echo $ticket['created_at']; ?></p>
+
+            <hr>
+
+            <h3>Comentarios</h3>
+            <?php if (count($comments) > 0): ?>
+                <?php foreach ($comments as $c): ?>
+                    <div class="comment-box">
+                        <p><strong><?php echo htmlspecialchars($c['username']); ?>:</strong></p>
+                        <p><?php echo nl2br(htmlspecialchars($c['comment'])); ?></p>
+                        <p><small><?php echo $c['created_at']; ?></small></p>
+                        <hr>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No hay comentarios todavía.</p>
+            <?php endif; ?>
+
+            <form method="POST">
+                <label for="comment">Agregar comentario:</label><br>
+                <textarea name="comment" id="comment" rows="4" cols="50" required></textarea><br>
+                <button type="submit">Enviar comentario</button>
+            </form>
+
+            <br>
+            <!-- Enlaces para volver -->
+            <a href="dashboard.php">← Volver al Dashboard</a> | 
+            <a href="misTickets.php">← Volver a Mis Tickets</a>
+        </main>
     </div>
 
     <script>
