@@ -1,12 +1,11 @@
 <?php
 session_start();
+require 'database.php';
 
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
     exit();
 }
-
-require 'database.php';
 
 $sql = "SELECT * FROM tickets WHERE user_id = :user_id";
 $stmt = $pdo->prepare($sql);
@@ -86,6 +85,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <th>Estado</th>
                             <th>Fecha de creación</th>
                             <th>Fecha actualización</th>
+                            <th>Ver detalles</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,6 +98,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo htmlspecialchars($ticket['status']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['created_at']); ?></td>
                             <td><?php echo htmlspecialchars($ticket['updated_at']); ?></td>
+                            <td><a href="ver_ticket.php?id=<?php echo $ticket['id']; ?>">Ver detalles</a></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
