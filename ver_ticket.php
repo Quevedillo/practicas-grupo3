@@ -70,14 +70,8 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p><small><?php echo $c['created_at']; ?></small></p>
                     <hr>
                 </div>
-                <div class="user-menu">
-                    <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
-                    <div class="user-dropdown">
-                        <a href="logout.php">Cerrar Sesión</a>
-                    </div>
-                </div>
-            </div>
-        </header>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
         <form method="POST">
             <label for="comment">Agregar comentario:</label><br>
