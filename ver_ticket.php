@@ -39,10 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['comment'])) {
 }
 
 // Obtener comentarios
-$sql_comments = "SELECT c.comment, c.created_at, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE c.ticket_id = :ticket_id ORDER BY c.created_at ASC";
+$sql_comments = "SELECT c.comment, c.created_at, u.username 
+                 FROM comments c 
+                 JOIN users u ON c.user_id = u.id 
+                 WHERE c.ticket_id = :ticket_id 
+                 ORDER BY c.created_at ASC";
 $stmt = $pdo->prepare($sql_comments);
 $stmt->execute(['ticket_id' => $ticket_id]);
 $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener archivos adjuntos
+$sql_attachments = "SELECT * FROM attachments WHERE ticket_id = :ticket_id";
+$stmt = $pdo->prepare($sql_attachments);
+$stmt->execute(['ticket_id' => $ticket_id]);
+$attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +68,19 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p><strong>Descripción:</strong> <?php echo nl2br(htmlspecialchars($ticket['description'])); ?></p>
         <p><strong>Estado:</strong> <?php echo $ticket['status']; ?> | <strong>Prioridad:</strong> <?php echo $ticket['priority']; ?></p>
         <p><strong>Creado:</strong> <?php echo $ticket['created_at']; ?></p>
+
+        <?php if (!empty($attachments)): ?>
+            <p><strong>Archivos adjuntos:</strong></p>
+            <ul>
+                <?php foreach ($attachments as $file): ?>
+                    <li>
+                        <a href="<?php echo htmlspecialchars($file['filepath']); ?>" download="<?php echo htmlspecialchars($file['filename']); ?>">
+                            <?php echo htmlspecialchars($file['filename']); ?> (<?php echo round($file['filesize'] / 1024, 2); ?> KB)
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
 
         <hr>
 
@@ -87,24 +110,17 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         document.addEventListener('DOMContentLoaded', function() {
             const themeButton = document.getElementById('theme-button');
             const body = document.body;
-            
-            // Check for saved theme preference
+
             if (localStorage.getItem('darkMode') === 'enabled') {
                 body.classList.add('dark-mode');
                 themeButton.textContent = 'Modo Claro';
             }
-            
-            themeButton.addEventListener('click', () => {
+
+            themeButton?.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
                 const isDarkMode = body.classList.contains('dark-mode');
-                
-                if (isDarkMode) {
-                    themeButton.textContent = 'Modo Claro';
-                    localStorage.setItem('darkMode', 'enabled');
-                } else {
-                    themeButton.textContent = 'Modo Oscuro';
-                    localStorage.setItem('darkMode', 'disabled');
-                }
+                themeButton.textContent = isDarkMode ? 'Modo Claro' : 'Modo Oscuro';
+                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
             });
         });
     </script>
