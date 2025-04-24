@@ -93,9 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
                     <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
 
                     <!-- Botón para eliminar comentario -->
-                    <form method="POST" action="deleteComment.php" style="display:inline;">
-                        <input type="hidden" name="comment_id" value="<?php echo htmlspecialchars($comment['id']); ?>">
-                        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este comentario?');" class="btn btn-danger">Eliminar Comentario</button>
+                    <form action="eliminar_comentario.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este comentario?');">
+                            <input type="hidden" name="comment_id" value="<?= $comentario['id'] ?>">
+                            <input type="hidden" name="ticket_id" value="<?= $ticket_id ?>">
+                            <button type="submit">Eliminar</button>
                     </form>
                 </div>
             <?php endforeach; ?>
