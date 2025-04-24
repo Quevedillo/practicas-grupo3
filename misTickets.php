@@ -142,6 +142,7 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
                     <th>Descripción</th>
                     <th><?= linkWithOrder('category_name', 'Categoría', $orderBy, $orderDir) ?></th>
                     <th><?= linkWithOrder('created_at', 'Fecha de creación', $orderBy, $orderDir) ?></th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -152,6 +153,7 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
                     <td><?= htmlspecialchars($ticket['description']) ?></td>
                     <td><?= htmlspecialchars($ticket['category_name']) ?></td>
                     <td><?= htmlspecialchars($ticket['created_at']) ?></td>
+                    <td><?= ucfirst(str_replace('_', ' ', htmlspecialchars($ticket['status']))) ?></td>
                     <td>
                         <form action="eliminar_ticket.php" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este ticket?');">
                             <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
