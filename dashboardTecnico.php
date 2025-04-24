@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <nav class="navbar">
             <ul>
-                <li><a href="panel_tecnico.php" class="active">Panel Técnico</a></li>
+                <li><a href="dashboardTecnico.php" class="active">Panel Técnico</a></li>
                 <li><a href="gestionPerfilTecnico.php">Editar Perfil</a></li>
             </ul>
         </nav>
@@ -268,84 +268,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?php echo htmlspecialchars($ticket['status']); ?></td>
                             <td><?php echo $waiting_days; ?> días</td>
                             <td>
-                                <button onclick="toggleDetails(<?php echo $ticket['id']; ?>)">Detalles</button>
-                            </td>
-                        </tr>
-                        <tr id="details-<?php echo $ticket['id']; ?>" class="ticket-details">
-                            <td colspan="8">
-                                <div>
-                                    <h4>Descripción:</h4>
-                                    <p><?php echo htmlspecialchars($ticket['description']); ?></p>
-                                    
-                                    <h4>Gestionar Ticket:</h4>
-                                    <form method="post">
-                                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
-                                        
-                                        <div class="form-group">
-                                            <label>Estado:</label>
-                                            <select name="status" class="form-control">
-                                                <?php foreach ($statuses as $value => $label): ?>
-                                                    <option value="<?php echo $value; ?>" <?php echo $ticket['status'] == $value ? 'selected' : ''; ?>>
-                                                        <?php echo $label; ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Comentario:</label>
-                                            <textarea name="comment" rows="3" class="form-control"></textarea>
-                                        </div>
-                                        
-                                        <button type="submit" name="update_ticket" class="btn btn-primary">Actualizar Ticket</button>
-                                    </form>
-                                    
-                                    <h4>Archivos Adjuntos:</h4>
-                                    <div class="ticket-attachments">
-                                        <?php
-                                        $stmt = $pdo->prepare("SELECT * FROM attachments WHERE ticket_id = ?");
-                                        $stmt->execute([$ticket['id']]);
-                                        $attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                        
-                                        if (count($attachments) > 0) {
-                                            foreach ($attachments as $attachment) {
-                                                echo '<div class="attachment-item">';
-                                                echo '<a href="' . htmlspecialchars($attachment['filepath']) . '" target="_blank">';
-                                                echo htmlspecialchars($attachment['filename']);
-                                                echo '</a> (' . formatFileSize($attachment['filesize']) . ')';
-                                                echo '</div>';
-                                            }
-                                        } else {
-                                            echo '<p>No hay archivos adjuntos.</p>';
-                                        }
-                                        ?>
-                                    </div>
-                                    
-                                    <h4>Comentarios:</h4>
-                                    <div class="ticket-comments">
-                                        <?php
-                                        $stmt = $pdo->prepare("SELECT c.*, u.username 
-                                                              FROM comments c 
-                                                              JOIN users u ON c.user_id = u.id 
-                                                              WHERE c.ticket_id = ? 
-                                                              ORDER BY c.created_at DESC");
-                                        $stmt->execute([$ticket['id']]);
-                                        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                        
-                                        if (count($comments) > 0) {
-                                            foreach ($comments as $comment) {
-                                                echo '<div class="comment-item">';
-                                                echo '<strong>' . htmlspecialchars($comment['username']) . '</strong> ';
-                                                echo '<small>' . htmlspecialchars($comment['created_at']) . '</small><br>';
-                                                echo htmlspecialchars($comment['comment']);
-                                                echo '</div>';
-                                            }
-                                        } else {
-                                            echo '<p>No hay comentarios registrados.</p>';
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
+                                <a class="btn btn-primary" href="detallesTecnico.php?id=<?php echo $ticket['id']; ?>">Detalles</a>
+                                <a href="ver_comentarios.php?ticket_id=<?php echo $ticket['id']; ?>" class="btn btn-secondary">Ver Comentarios</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
