@@ -78,10 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
 
                 <form method="POST" action="deleteTicket.php" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este ticket?');">
                     <input type="hidden" name="ticket_id" value="<?php echo htmlspecialchars($ticket['id']); ?>">
-                    <form action="eliminar_ticket.php" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este ticket?');">
-                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
-                        <button type="submit" class="delete-button">Eliminar</button>
-                    </form>
+                    <button type="submit" class="btn btn-danger">Eliminar Ticket</button>
                 </form>
             </div>
 
