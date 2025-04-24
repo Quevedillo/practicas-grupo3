@@ -8,12 +8,7 @@ if (!isset($_SESSION['id'])) {
 
 require 'database.php';
 
-// Traer categorías
-$catStmt = $pdo->query("SELECT id, name FROM categories");
-$categorias = $catStmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Traer tickets del usuario con JOIN a categorías
-$sql = "SELECT t.id, t.title, t.description, t.created_at, t.status, t.category_id, c.name AS category_name
+$sql = "SELECT t.id, t.title, t.description, t.created_at, t.status, c.name AS category_name
         FROM tickets t
         JOIN categories c ON t.category_id = c.id
         WHERE t.user_id = :user_id";
@@ -25,160 +20,153 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Tickets</title>
     <link rel="stylesheet" href="estilodashboard.css">
-    <style>
-        .ticket-filter { margin-bottom: 20px; background: #f0f0f0; padding: 15px; border-radius: 10px; }
-        .ticket-filter form { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
-        .ticket-filter label { font-weight: bold; }
-    </style>
 </head>
 <body>
-<div class="container">
-    <header class="header">
-        <div class="logo">
-            <img src="https://camaradesevilla.com/wp-content/uploads/2024/07/S00-logo-Grupo-Solutia-v01-1.png" alt="Logo">
-        </div>
-        <div class="header-right">
-            <div class="theme-toggle">
-                <button id="theme-button">Modo Oscuro</button>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <img src="https://camaradesevilla.com/wp-content/uploads/2024/07/S00-logo-Grupo-Solutia-v01-1.png" alt="Logo del Sistema">
             </div>
-            <div class="user-menu">
-                <span><?= htmlspecialchars($_SESSION['username']); ?> ▼</span>
-                <div class="user-dropdown">
-                    <a href="logout.php">Cerrar Sesión</a>
+            <div class="header-right">
+                <div class="theme-toggle">
+                    <button id="theme-button">Modo Oscuro</button>
+                </div>
+                <div class="user-menu">
+                    <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
+                    <div class="user-dropdown">
+                        <a href="logout.php">Cerrar Sesión</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <nav class="navbar">
-        <ul>
-            <li><a href="dashboard.php">Panel</a></li>
-            <li><a href="misTickets.php" class="active">Mis Tickets</a></li>
-            <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
-            <li><a href="clienteTecnico.php">Comunicación</a></li>
-        </ul>
-    </nav>
+        <nav class="navbar">
+            <ul>
+                <li><a href="dashboard.php">Panel</a></li>
+                <li><a href="misTickets.php" class="active">Mis Tickets</a></li>
+                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="clienteTecnico.php">Comunicación</a></li>
+            </ul>
+        </nav>
 
-    <main class="main-content">
-        <h2>Mis Tickets</h2>
+        <main class="main-content">
+            <h2>Mis Tickets</h2>
 
-        <div class="ticket-filter">
-            <h3>Filtrar</h3>
-            <form id="filter-form">
-                <label for="estado">Estado:</label>
-                <select id="estado">
-                    <option value="">Todos</option>
-                    <option value="open">Abierto</option>
-                    <option value="in_progress">En Progreso</option>
-                    <option value="resolved">Resuelto</option>
-                    <option value="closed">Cerrado</option>
-                </select>
+            <!-- Filtros -->
+            <div class="filtros">
+                <form id="filtro-form">
+                    <label for="estado">Estado:</label>
+                    <select id="estado">
+                        <option value="">Todos</option>
+                        <option value="open">Abierto</option>
+                        <option value="in_progress">En Proceso</option>
+                        <option value="resolved">Resuelto</option>
+                        <option value="closed">Cerrado</option>
+                    </select>
 
-                <label for="categoria">Categoría:</label>
-                <select id="categoria">
-                    <option value="">Todas</option>
-                    <?php foreach ($categorias as $cat): ?>
-                        <option value="<?= $cat['name'] ?>"><?= $cat['name'] ?></option>
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria">
+                        <option value="">Todas</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Software">Software</option>
+                        <option value="Red">Red</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+
+                    <label for="fecha_inicio">Desde:</label>
+                    <input type="date" id="fecha_inicio">
+
+                    <label for="fecha_fin">Hasta:</label>
+                    <input type="date" id="fecha_fin">
+
+                    <button type="submit">Aplicar</button>
+                    <button type="reset" onclick="location.reload()">Reiniciar</button>
+                </form>
+            </div>
+
+            <?php if (count($tickets) > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Fecha de creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="ticket-table">
+                    <?php foreach ($tickets as $ticket): ?>
+                    <tr data-estado="<?php echo $ticket['status']; ?>" data-categoria="<?php echo $ticket['category_name']; ?>" data-fecha="<?php echo substr($ticket['created_at'], 0, 10); ?>">
+                        <td><?php echo htmlspecialchars($ticket['title']); ?></td>
+                        <td><?php echo htmlspecialchars($ticket['description']); ?></td>
+                        <td><?php echo htmlspecialchars($ticket['category_name']); ?></td>
+                        <td><?php echo htmlspecialchars($ticket['status']); ?></td>
+                        <td><?php echo htmlspecialchars($ticket['created_at']); ?></td>
+                        <td>
+                            <form action="eliminar_ticket.php" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este ticket?');">
+                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
+                                <button type="submit" class="delete-button">Eliminar</button>
+                            </form>
+                            <a href="editar_ticket.php?id=<?php echo $ticket['id']; ?>" class="edit-button">Editar</a>
+                            <a href="ver_ticket.php?id=<?php echo $ticket['id']; ?>" class="view-button">Ver Comentarios</a>
+                        </td>
+                    </tr>
                     <?php endforeach; ?>
-                </select>
+                </tbody>
+            </table>
+            <?php else: ?>
+            <p>No tienes tickets registrados.</p>
+            <?php endif; ?>
+        </main>
+    </div>
 
-                <label for="fecha">Fecha:</label>
-                <input type="date" id="fecha">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeButton = document.getElementById('theme-button');
+            const body = document.body;
 
-                <button type="submit">Aplicar</button>
-                <button type="button" id="reset">Reiniciar</button>
-            </form>
-        </div>
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+                themeButton.textContent = 'Modo Claro';
+            }
 
-        <?php if (count($tickets) > 0): ?>
-        <table>
-            <thead>
-            <tr>
-                <th>Título</th>
-                <th>Descripción</th>
-                <th>Categoría</th>
-                <th>Estado</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($tickets as $ticket): ?>
-                <tr
-                    data-estado="<?= $ticket['status'] ?>"
-                    data-categoria="<?= $ticket['category_name'] ?>"
-                    data-fecha="<?= date('Y-m-d', strtotime($ticket['created_at'])) ?>">
-                    <td><?= htmlspecialchars($ticket['title']) ?></td>
-                    <td><?= htmlspecialchars($ticket['description']) ?></td>
-                    <td><?= htmlspecialchars($ticket['category_name']) ?></td>
-                    <td><?= htmlspecialchars($ticket['status']) ?></td>
-                    <td><?= htmlspecialchars($ticket['created_at']) ?></td>
-                    <td>
-                        <form action="eliminar_ticket.php" method="POST" onsubmit="return confirm('¿Eliminar este ticket?');">
-                            <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
-                            <button type="submit" class="delete-button">Eliminar</button>
-                        </form>
-                        <a href="editar_ticket.php?id=<?= $ticket['id'] ?>" class="edit-button">Editar</a>
-                        <a href="ver_ticket.php?id=<?= $ticket['id'] ?>" class="view-button">Ver</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-        <?php else: ?>
-            <p>No hay tickets disponibles.</p>
-        <?php endif; ?>
-    </main>
-</div>
+            themeButton.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                themeButton.textContent = isDarkMode ? 'Modo Claro' : 'Modo Oscuro';
+                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            });
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const themeBtn = document.getElementById('theme-button');
-        const body = document.body;
+            const form = document.getElementById('filtro-form');
+            const rows = document.querySelectorAll('#ticket-table tr');
 
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
-            themeBtn.textContent = 'Modo Claro';
-        }
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                const estado = document.getElementById('estado').value;
+                const categoria = document.getElementById('categoria').value;
+                const fechaInicio = document.getElementById('fecha_inicio').value;
+                const fechaFin = document.getElementById('fecha_fin').value;
 
-        themeBtn.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
-            themeBtn.textContent = body.classList.contains('dark-mode') ? 'Modo Claro' : 'Modo Oscuro';
-        });
+                rows.forEach(row => {
+                    const rowEstado = row.dataset.estado;
+                    const rowCategoria = row.dataset.categoria;
+                    const rowFecha = row.dataset.fecha;
 
-        // Filtro
-        const form = document.getElementById('filter-form');
-        const resetBtn = document.getElementById('reset');
-        const rows = document.querySelectorAll('tbody tr');
+                    let visible = true;
+                    if (estado && rowEstado !== estado) visible = false;
+                    if (categoria && rowCategoria !== categoria) visible = false;
+                    if (fechaInicio && rowFecha < fechaInicio) visible = false;
+                    if (fechaFin && rowFecha > fechaFin) visible = false;
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            const estado = document.getElementById('estado').value;
-            const categoria = document.getElementById('categoria').value;
-            const fecha = document.getElementById('fecha').value;
-
-            rows.forEach(row => {
-                const rowEstado = row.dataset.estado;
-                const rowCategoria = row.dataset.categoria;
-                const rowFecha = row.dataset.fecha;
-
-                let visible = true;
-                if (estado && rowEstado !== estado) visible = false;
-                if (categoria && rowCategoria !== categoria) visible = false;
-                if (fecha && rowFecha !== fecha) visible = false;
-
-                row.style.display = visible ? '' : 'none';
+                    row.style.display = visible ? '' : 'none';
+                });
             });
         });
-
-        resetBtn.addEventListener('click', () => {
-            form.reset();
-            rows.forEach(row => row.style.display = '');
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
