@@ -2,43 +2,30 @@
 require 'database.php';
 session_start();
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['id'], $_SESSION['role'])) {
-    echo "Usuario no autenticado.";
-    exit();
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['comment_id']) && !empty($_POST['ticket_id']) && isset($_SESSION['user_id']) && $_SESSION['role'] === 'tech') {
+        $comment_id = (int)$_POST['comment_id'];
+        $ticket_id = (int)$_POST['ticket_id'];
 
-// Verificar que el ticket_id y comment_id estén presentes en la URL
-if (isset($_GET['ticket_id'], $_GET['comment_id'])) {
-    $ticket_id = $_GET['ticket_id'];
-    $comment_id = $_GET['comment_id'];
-    $user_id = $_SESSION['id'];
-    $user_role = $_SESSION['role']; // 'admin', 'tech', 'client'
+        // Verificamos que el comentario existe y pertenece al ticket
+        $checkStmt = $pdo->prepare("SELECT * FROM comments WHERE id = ? AND ticket_id = ?");
+        $checkStmt->execute([$comment_id, $ticket_id]);
 
-    // Obtener el comentario
-    $stmt = $pdo->prepare("SELECT * FROM comments WHERE id = ? AND ticket_id = ?");
-    $stmt->execute([$comment_id, $ticket_id]);
-    $comment = $stmt->fetch();
-
-    if ($comment) {
-        // Verificar si el usuario tiene permisos para eliminar el comentario
-        if ($comment['user_id'] == $user_id || $user_role === 'admin') {
-            // Eliminar el comentario
-            $deleteStmt = $pdo->prepare("DELETE FROM comments WHERE id = ?");
-            if ($deleteStmt->execute([$comment_id])) {
+        if ($checkStmt->rowCount() === 1) {
+            $stmt = $pdo->prepare("DELETE FROM comments WHERE id = ?");
+            if ($stmt->execute([$comment_id])) {
                 header("Location: ver_comentarios.php?ticket_id=$ticket_id");
                 exit();
             } else {
                 echo "Error al eliminar el comentario.";
             }
         } else {
-            echo "No tienes permisos para eliminar este comentario.";
+            echo "No se encontró el comentario o no pertenece al ticket.";
         }
     } else {
-        echo "Comentario no encontrado.";
+        echo "Datos incompletos o usuario no autenticado.";
     }
 } else {
-    echo "Datos incompletos o parámetros no válidos.";
-    exit();
+    echo "Método no permitido.";
 }
 ?>

@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
 
         <nav class="navbar">
             <ul>
-                <li><a href="panel_tecnico.php" class="active">Panel Técnico</a></li>
+                <li><a href="dashboardTecnico.php" class="active">Panel Técnico</a></li>
                 <li><a href="gestionPerfilTecnico.php">Editar Perfil</a></li>
             </ul>
         </nav>
