@@ -14,8 +14,8 @@ if (isset($_GET['ticket_id'])) {
     $stmt->execute([$ticket_id]);
     $ticket = $stmt->fetch();
 
-    // Obtener los comentarios para el ticket
-    $commentStmt = $pdo->prepare("SELECT c.comment, c.created_at, u.username
+    // Obtener los comentarios para el ticket (incluyendo id del comentario)
+    $commentStmt = $pdo->prepare("SELECT c.id, c.comment, c.created_at, u.username
                                   FROM comments c
                                   JOIN users u ON c.user_id = u.id
                                   WHERE c.ticket_id = ?
@@ -83,34 +83,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
             </div>
 
             <div class="chat">
-    <h3>Historial de Comentarios</h3>
-    <div class="chat-messages">
-        <?php if (count($comments) > 0): ?>
-            <?php foreach ($comments as $comment): ?>
-                <div class="chat-message">
-                    <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
-                    <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
-                    <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
+                <h3>Historial de Comentarios</h3>
+                <div class="chat-messages">
+                    <?php if (count($comments) > 0): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="chat-message">
+                                <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
+                                <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
+                                <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
 
-                    <!-- Botón para eliminar comentario -->
-                    <form action="eliminar_comentario.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este comentario?');">
-                            <input type="hidden" name="comment_id" value="<?= $comentario['id'] ?>">
-                            <input type="hidden" name="ticket_id" value="<?= $ticket_id ?>">
-                            <button type="submit">Eliminar</button>
-                    </form>
+                                <!-- Botón para eliminar comentario -->
+                                <form action="eliminar_comentario.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este comentario?');">
+                                    <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                    <input type="hidden" name="ticket_id" value="<?= $ticket_id ?>">
+                                    <button type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No hay comentarios para este ticket.</p>
+                    <?php endif; ?>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No hay comentarios para este ticket.</p>
-        <?php endif; ?>
-    </div>
 
-    <!-- Formulario para agregar un nuevo comentario -->
-    <form method="POST" action="ver_comentarios.php?ticket_id=<?php echo $ticket_id; ?>" class="comment-form">
-        <textarea name="comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
-        <button type="submit">Agregar Comentario</button>
-    </form>
-</div>
+                <!-- Formulario para agregar un nuevo comentario -->
+                <form method="POST" action="ver_comentarios.php?ticket_id=<?php echo $ticket_id; ?>" class="comment-form">
+                    <textarea name="comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
+                    <button type="submit">Agregar Comentario</button>
+                </form>
+            </div>
 
             <div class="back-button">
                 <a href="dashboardTecnico.php" class="btn btn-primary">Volver al Panel</a>
