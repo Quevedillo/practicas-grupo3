@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
         
-        header("Location: panel_tecnico.php?updated=".$ticket_id);
+        header("Location: dashboardTecnico.php?updated=".$ticket_id);
         exit();
     }
     
@@ -139,6 +139,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .history-item { margin-bottom: 5px; padding: 5px; border-bottom: 1px solid #eee; }
         .comment-item { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
         .attachment-item { display: inline-block; margin-right: 10px; }
+        .btn-danger { background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-danger:hover { background-color: #c82333; }
     </style>
 </head>
 <body>
@@ -193,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="search">Buscar:</label>
                         <input type="text" id="search" name="search" placeholder="ID, título o contenido">
                         <button type="submit">Buscar</button>
-                        <a href="panel_tecnico.php" class="button">Limpiar</a>
+                        <a href="dashboardTecnico.php" class="button">Limpiar</a>
                     </div>
                     
                     <div class="filter-group">
@@ -229,6 +231,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2>Tickets</h2>
                 <?php if (isset($_GET['updated'])): ?>
                     <div class="alert alert-success">Ticket #<?php echo htmlspecialchars($_GET['updated']); ?> actualizado correctamente.</div>
+                <?php endif; ?>
+                <?php if (isset($_GET['deleted'])): ?>
+                    <div class="alert alert-success">Ticket eliminado correctamente.</div>
+                <?php endif; ?>
+                <?php if (isset($_GET['error']) && $_GET['error'] == 'delete'): ?>
+                    <div class="alert alert-danger">Error al eliminar el ticket.</div>
                 <?php endif; ?>
                 
                 <?php if (count($tickets) > 0): ?>
@@ -270,6 +278,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td>
                                 <a class="btn btn-primary" href="detallesTecnico.php?id=<?php echo $ticket['id']; ?>">Detalles</a>
                                 <a href="ver_comentarios.php?ticket_id=<?php echo $ticket['id']; ?>" class="btn btn-secondary">Ver Comentarios</a>
+                                <?php if ($user['role'] === 'admin'): ?>
+                                    <form method="post" action="eliminar_ticket.php" style="display:inline;" onsubmit="return confirm('¿Estás seguro de querer eliminar este ticket?');">
+                                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
+                                        <button type="submit" class="btn-danger">Eliminar</button>
+                                    </form>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

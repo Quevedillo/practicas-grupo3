@@ -1,35 +1,66 @@
 <?php
-// Incluir el archivo de conexión a la base de datos
-require_once 'database.php';
+session_start();
+
+// Verificar autenticación
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+require 'database.php';
+
+// Verificar rol de admin
+$stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
+$stmt->execute([$_SESSION['id']]);
+$user = $stmt->fetch();
+
+if ($user['role'] !== 'admin') {
+    header('Location: dashboardTecnico.php?error=unauthorized');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ticket_id'])) {
     $ticket_id = $_POST['ticket_id'];
 
     try {
-        // Iniciar la transacción para asegurarse de que ambas operaciones se realicen correctamente
         $pdo->beginTransaction();
 
-        // Eliminar los archivos adjuntos relacionados con el ticket
-        $stmt = $pdo->prepare("DELETE FROM attachments WHERE ticket_id = :ticket_id");
-        $stmt->execute(['ticket_id' => $ticket_id]);
+        // 1. Eliminar comentarios relacionados
+        $stmt = $pdo->prepare("DELETE FROM comments WHERE ticket_id = ?");
+        $stmt->execute([$ticket_id]);
 
-        // Ahora eliminar el ticket
-        $stmt = $pdo->prepare("DELETE FROM tickets WHERE id = :ticket_id");
-        $stmt->execute(['ticket_id' => $ticket_id]);
+        // 2. Eliminar archivos adjuntos (y los archivos físicos si es necesario)
+        // Primero obtenemos la información de los archivos para eliminarlos del sistema de archivos
+        $stmt = $pdo->prepare("SELECT file_path FROM attachments WHERE ticket_id = ?");
+        $stmt->execute([$ticket_id]);
+        $attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Confirmar la transacción
+        foreach ($attachments as $attachment) {
+            if (file_exists($attachment['file_path'])) {
+                unlink($attachment['file_path']);
+            }
+        }
+
+        // Luego eliminamos los registros de la base de datos
+        $stmt = $pdo->prepare("DELETE FROM attachments WHERE ticket_id = ?");
+        $stmt->execute([$ticket_id]);
+
+        // 3. Finalmente eliminamos el ticket
+        $stmt = $pdo->prepare("DELETE FROM tickets WHERE id = ?");
+        $stmt->execute([$ticket_id]);
+
         $pdo->commit();
-
-        // Redirigir al usuario después de eliminar el ticket (opcional)
-        header('Location: misTickets.php'); // Cambia a la página que prefieras
+        
+        header('Location: dashboardTecnico.php?deleted=1');
         exit();
     } catch (PDOException $e) {
-        // Si ocurre algún error, deshacer la transacción
         $pdo->rollBack();
-        echo "Error al eliminar el ticket: " . $e->getMessage();
+        error_log("Error al eliminar ticket: " . $e->getMessage());
+        header('Location: dashboardTecnico.php?error=delete');
+        exit();
     }
 } else {
-    echo "No se ha recibido un ID de ticket válido.";
+    header('Location: dashboardTecnico.php');
+    exit();
 }
 ?>
-
