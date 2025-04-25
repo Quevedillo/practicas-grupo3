@@ -1,5 +1,7 @@
 <?php
+
 session_start();
+
 
 // Verificar autenticación
 if (!isset($_SESSION['id'])) {
