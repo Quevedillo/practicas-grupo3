@@ -2,36 +2,9 @@
 // Requerir el archivo de conexión
 require 'database.php';
 
-<<<<<<< HEAD
 // Validar si existe el parámetro 'ticket_id' en la URL
 if (!isset($_GET['ticket_id']) || !is_numeric($_GET['ticket_id'])) {
     die("Error: No se proporcionó un 'ticket_id' válido.");
-=======
-// Verificar que el ticket_id esté presente en la URL
-if (isset($_GET['ticket_id'])) {
-    $ticket_id = $_GET['ticket_id'];
-
-    // Obtener el ticket y sus comentarios
-    $stmt = $pdo->prepare("SELECT t.*, u.username as cliente, c.name as categoria 
-                           FROM tickets t
-                           JOIN users u ON t.user_id = u.id
-                           JOIN categories c ON t.category_id = c.id
-                           WHERE t.id = ?");
-    $stmt->execute([$ticket_id]);
-    $ticket = $stmt->fetch();
-
-    // Obtener los comentarios para el ticket
-    $commentStmt = $pdo->prepare("SELECT c.comment, c.created_at, u.username
-                                  FROM comments c
-                                  JOIN users u ON c.user_id = u.id
-                                  WHERE c.ticket_id = ?
-                                  ORDER BY c.created_at ASC");
-    $commentStmt->execute([$ticket_id]);
-    $comments = $commentStmt->fetchAll();
-} else {
-    echo "Ticket no encontrado.";
-    exit();
->>>>>>> fd3af5c5e2b3a1e2d1176dcd375f87a6fe8dbbbe
 }
 
 $ticket_id = intval($_GET['ticket_id']);
@@ -166,47 +139,11 @@ try {
                 <?php endif; ?>
             </div>
 
-<<<<<<< HEAD
             <h3>Agregar un Comentario</h3>
             <form method="POST" action="ver_comentarios.php?ticket_id=<?= htmlspecialchars($ticket_id) ?>" class="comment-form">
                 <textarea name="new_comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
                 <button type="submit">Agregar Comentario</button>
             </form>
-=======
-            <div class="chat">
-    <h3>Historial de Comentarios</h3>
-    <div class="chat-messages">
-        <?php if (count($comments) > 0): ?>
-            <?php foreach ($comments as $comment): ?>
-                <div class="chat-message">
-                    <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
-                    <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
-                    <p><small>Publicado el <?php echo htmlspecialchars($comment['created_at']); ?></small></p>
-
-                    <!-- Botón para eliminar comentario -->
-                    <form action="eliminar_comentario.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este comentario?');">
-                            <input type="hidden" name="comment_id" value="<?= $comentario['id'] ?>">
-                            <input type="hidden" name="ticket_id" value="<?= $ticket_id ?>">
-                            <button type="submit">Eliminar</button>
-                    </form>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No hay comentarios para este ticket.</p>
-        <?php endif; ?>
-    </div>
-
-    <!-- Formulario para agregar un nuevo comentario -->
-    <form method="POST" action="ver_comentarios.php?ticket_id=<?php echo $ticket_id; ?>" class="comment-form">
-        <textarea name="comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
-        <button type="submit">Agregar Comentario</button>
-    </form>
-</div>
-
-            <div class="back-button">
-                <a href="dashboardTecnico.php" class="btn btn-primary">Volver al Panel</a>
-            </div>
->>>>>>> fd3af5c5e2b3a1e2d1176dcd375f87a6fe8dbbbe
         </main>
     </div>
 </body>
