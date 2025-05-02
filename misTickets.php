@@ -155,10 +155,6 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
                     <td><?= htmlspecialchars($ticket['created_at']) ?></td>
                     <td><?= ucfirst(str_replace('_', ' ', htmlspecialchars($ticket['status']))) ?></td>
                     <td>
-                        <form action="eliminar_ticket.php" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este ticket?');">
-                            <input type="hidden" name="ticket_id" value="<?= $ticket['id'] ?>">
-                            <button type="submit" class="delete-button">Eliminar</button>
-                        </form>
                         <a href="editar_ticket.php?id=<?= $ticket['id'] ?>" class="edit-button">Editar</a>
                         <a href="ver_ticket.php?id=<?= $ticket['id'] ?>" class="view-button">Ver Comentarios</a>
                     </td>
