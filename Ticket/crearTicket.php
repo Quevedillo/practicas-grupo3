@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } catch (PDOException $e) {
         $pdo->rollBack();
         $_SESSION['error_message'] = "Error al crear el ticket: " . $e->getMessage();
-        header("Location: crearTicket.php");
+        header("Location: ../Ticket/crearTicket.php");
         exit();
     }
 }
