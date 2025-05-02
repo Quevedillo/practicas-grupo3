@@ -50,7 +50,7 @@ require '../Conexion/database.php';
                 <?php if (isset($_GET['success'])): ?>
                     <p class="success-message">Mensaje enviado con éxito.</p>
                 <?php endif; ?>
-                <form action="procesar_contacto.php" method="POST">
+                <form action="../Cliente/procesar_contacto.php" method="POST">
                     <div class="form-group">
                         <label for="asunto">Asunto:</label>
                         <input type="text" id="asunto" name="asunto" required>
