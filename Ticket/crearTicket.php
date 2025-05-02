@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="new-ticket-form">
                 <h2>Crear Nuevo Ticket</h2>
-                <form action="crearTicket.php" method="POST" enctype="multipart/form-data">
+                <form action="../Ticket/crearTicket.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="title">Título:</label>
                         <input type="text" id="title" name="title" required>
