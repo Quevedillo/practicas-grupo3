@@ -7,7 +7,7 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-require 'database.php';
+require '../Conexion/database.php';
 
 // Verificar rol de admin
 $stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
@@ -15,7 +15,7 @@ $stmt->execute([$_SESSION['id']]);
 $user = $stmt->fetch();
 
 if ($user['role'] !== 'admin') {
-    header('Location: dashboardTecnico.php?error=unauthorized');
+    header('Location: ../Tecnico/dashboardTecnico.php?error=unauthorized');
     exit();
 }
 
@@ -51,16 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ticket_id'])) {
 
         $pdo->commit();
         
-        header('Location: dashboardTecnico.php?deleted=1');
+        header('Location: ../Tecnico/dashboardTecnico.php?deleted=1');
         exit();
     } catch (PDOException $e) {
         $pdo->rollBack();
         error_log("Error al eliminar ticket: " . $e->getMessage());
-        header('Location: dashboardTecnico.php?error=delete');
+        header('Location: ../Tecnico/dashboardTecnico.php?error=delete');
         exit();
     }
 } else {
-    header('Location: dashboardTecnico.php');
+    header('Location: ../Tecnico/dashboardTecnico.php');
     exit();
 }
 ?>

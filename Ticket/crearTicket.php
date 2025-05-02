@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'database.php';
+require '../Conexion/database.php';
 
 if (!isset($_SESSION['id'])) {
-    header("Location: login.php");
+    header("Location: ../sesion/login.php");
     exit();
 }
 
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $pdo->commit();
-        header("Location: dashboard.php");
+        header("Location: ../Cliente/dashboard.php");
         exit();
     } catch (PDOException $e) {
         $pdo->rollBack();
@@ -92,10 +92,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <nav class="navbar">
         <ul>
-                <li><a href="dashboard.php" class="active">Panel</a></li>
-                <li><a href="misTickets.php">Mis Tickets</a></li>
-                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
-                <li><a href="clienteTecnico.php">Comunicación</a></li>
+                <li><a href="../Cliente/dashboard.php" class="active">Panel</a></li>
+                <li><a href="../Cliente/misTickets.php">Mis Tickets</a></li>
+                <li><a href="../Cliente/gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="../Cliente/clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
 
