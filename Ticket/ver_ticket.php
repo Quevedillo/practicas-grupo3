@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'database.php';
+require '../Conexion/database.php';
 
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['comment'])) {
         'user_id' => $_SESSION['id'],
         'comment' => $_POST['comment']
     ]);
-    header("Location: ver_ticket.php?id=$ticket_id");
+    header("Location: ../Ticket/ver_ticket.php?id=$ticket_id");
     exit();
 }
 
@@ -60,7 +60,7 @@ $attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Detalles del Ticket</title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
 </head>
 <body>
     <div class="container">
@@ -103,7 +103,7 @@ $attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
 
         <br>
-        <a href="misTickets.php">← Volver a Mis Tickets</a>
+        <a href="../Cliente/misTickets.php">← Volver a Mis Tickets</a>
     </div>
 
     <script>
