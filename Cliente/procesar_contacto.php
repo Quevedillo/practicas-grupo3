@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mensaje = trim($_POST['mensaje'] ?? '');
 
     if (empty($asunto) || empty($tecnico_id) || empty($mensaje)) {
-        die("Error: Todos los campos son obligatorios");
+        die("Error: Todos los campos son obligaatorios");
     }
 
     // Verificar que el usuario está autenticado
