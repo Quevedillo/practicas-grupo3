@@ -44,13 +44,6 @@ if (!$ticket) {
     <label for="descripcion">Descripción:</label><br>
     <textarea id="descripcion" name="descripcion" rows="5" required><?php echo htmlspecialchars($ticket['description']); ?></textarea><br><br>
 
-    <label for="estado">Estado:</label><br>
-    <select id="estado" name="estado">
-        <option value="open" <?php if ($ticket['status'] == 'open') echo 'selected'; ?>>Abierto</option>
-        <option value="in_progress" <?php if ($ticket['status'] == 'in_progress') echo 'selected'; ?>>En Proceso</option>
-        <option value="closed" <?php if ($ticket['status'] == 'closed') echo 'selected'; ?>>Cerrado</option>
-    </select><br><br>
-
     <button type="submit">Guardar Cambios</button>
 </form>
 

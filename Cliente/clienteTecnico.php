@@ -14,7 +14,7 @@ require '../Conexion/database.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto - Sistema de Tickets</title>
-    <link rel="stylesheet" href="clienteTecnico.css">
+    <link rel="stylesheet" href="../css/clienteTecnico.css">
 </head>
 <body>
     <div class="container">
