@@ -3,11 +3,11 @@ session_start();
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
-require 'database.php'; // Asegúrate de que este archivo tenga la conexión PDO correcta
+require '../Conexion/database.php'; // Asegúrate de que este archivo tenga la conexión PDO correcta
 
 // Verificar si el ID del ticket está presente en la URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -33,7 +33,7 @@ $stmt->bindParam(':id', $id_ticket, PDO::PARAM_INT);
 
 if ($stmt->execute()) {
     // Redirigir al usuario a la lista de tickets después de la actualización
-    header('Location: misTickets.php');
+    header('Location: ../Cliente/misTickets.php');
     exit();
 } else {
     echo "Error al actualizar el ticket.";
