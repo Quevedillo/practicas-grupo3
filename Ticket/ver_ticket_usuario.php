@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'database.php';
+require '../Conexion/database.php';
 
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['comment'])) {
         'user_id' => $_SESSION['id'],
         'comment' => $_POST['comment']
     ]);
-    header("Location: ver_ticket.php?id=$ticket_id");
+    header("Location: ../Ticket/ver_ticket.php?id=$ticket_id");
     exit();
 }
 
@@ -50,7 +50,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Detalles del Ticket</title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
 </head>
 <body>
     <div class="container">
@@ -65,7 +65,7 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="user-menu">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                     <div class="user-dropdown">
-                        <a href="logout.php">Cerrar Sesión</a>
+                        <a href="../sesion/logout.php">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
@@ -73,10 +73,10 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <nav class="navbar">
             <ul>
-                <li><a href="dashboard.php">Panel</a></li>
-                <li><a href="misTickets.php">Mis Tickets</a></li>
-                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
-                <li><a href="clienteTecnico.php">Comunicación</a></li>
+                <li><a href="../Cliente/dashboard.php">Panel</a></li>
+                <li><a href="../Cliente/misTickets.php">Mis Tickets</a></li>
+                <li><a href="../Cliente/gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="../Cliente/clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
 
@@ -110,8 +110,8 @@ $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <br>
             <!-- Enlaces para volver -->
-            <a href="dashboard.php">← Volver al Dashboard</a> | 
-            <a href="misTickets.php">← Volver a Mis Tickets</a>
+            <a href="../Cliente/dashboard.php">← Volver al Dashboard</a> | 
+            <a href="../Cliente/misTickets.php">← Volver a Mis Tickets</a>
         </main>
     </div>
 
