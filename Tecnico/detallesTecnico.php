@@ -1,5 +1,5 @@
 <?php
-require 'database.php';
+require '../Conexion/database.php';
 session_start();
 
 if (!isset($_GET['id'])) {
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Redirigir al dashboard
-        header("Location: dashboardTecnico.php");
+        header("Location: ../Tecnico/dashboardTecnico.php");
         exit;
     }
 }
@@ -230,7 +230,7 @@ $adjuntos->execute([$ticket_id]);
         <?php endif; ?>
 
         <button type="submit" name="actualizar">Actualizar Ticket</button>
-        <a href="dashboardTecnico.php" class="btn">Volver al Panel</a>
+        <a href="../Tecnico/dashboardTecnico.php" class="btn">Volver al Panel</a>
     </form>
 </body>
 </html>
