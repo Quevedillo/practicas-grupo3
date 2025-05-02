@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'database.php';
+require '../Conexion/database.php';
 
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 

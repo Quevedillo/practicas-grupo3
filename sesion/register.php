@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("database.php");
+include("../Conexion/database.php");
 
 // Procesar el formulario de registro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ]);
 
             // Redirigir al login después del registro exitoso
-            header("Location: login.php");
+            header("Location: ../sesion/login.php");
             exit();
 
         } catch (PDOException $e) {
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Sistema de Tickets</title>
-    <link rel="stylesheet" href="estilologin.css"> <!-- Reutilizamos el mismo CSS -->
+    <link rel="stylesheet" href="../css/estilologin.css"> <!-- Reutilizamos el mismo CSS -->
 </head>
 <body>
     <div class="container">

@@ -5,11 +5,11 @@ session_start();
 
 // Verificar autenticación
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
-require 'database.php';
+require '../conexion/database.php';
 
 // Verificar rol de técnico o admin
 $stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="user-menu">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?> (<?php echo htmlspecialchars($user['role']); ?>)</span>
                     <div class="user-dropdown">
-                        <a href="logout.php">Cerrar Sesión</a>
+                        <a href="../sesion/logout.php">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>

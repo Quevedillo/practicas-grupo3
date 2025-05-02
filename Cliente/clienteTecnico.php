@@ -2,11 +2,11 @@
 session_start();
 
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
-require 'database.php';
+require '../Conexion/database.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">

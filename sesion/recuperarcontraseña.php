@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("database.php");
+include("../Conexion/database.php");
 
 // Manejo del formulario de solicitud de recuperación
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {

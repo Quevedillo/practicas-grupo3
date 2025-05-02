@@ -7,7 +7,7 @@ session_start([
     'use_strict_mode' => true // Mayor seguridad
 ]);
 
-include("database.php");
+include("../Conexion/database.php");
 
 // Configuración de seguridad
 define('MAX_LOGIN_ATTEMPTS', 5); // Intentos máximos antes de bloqueo
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                         
                         // Redirección según el rol
-                        $redirect_page = ($user['role'] === 'tech') ? 'dashboardTecnico.php' : 'dashboard.php';
+                        $redirect_page = ($user['role'] === 'tech') ? '../Tecnico/dashboardTecnico.php' : '../Cliente/dashboard.php';
                         
                         // Redirección con JavaScript como respaldo
                         echo '<script>window.location.href = "'.$redirect_page.'";</script>';
@@ -137,7 +137,7 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['remember_me'])) {
                     $_SESSION['role'] = $user['role'];
                     
                     // Redirección según el rol
-                    $redirect_page = ($user['role'] === 'tech') ? 'dashboardTecnico.php' : 'dashboard.php';
+                    $redirect_page = ($user['role'] === 'tech') ? '../Tecnico/dashboardTecnico.php' : '../Cliente/dashboard.php';
                     header("Location: ".$redirect_page);
                     exit();
                 }
@@ -160,7 +160,7 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['remember_me'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema de Tickets</title>
-    <link rel="stylesheet" href="estilologin.css">
+    <link rel="stylesheet" href="../css/estilologin.css">
     <style>
         .remember-me {
             display: flex;
@@ -209,8 +209,8 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['remember_me'])) {
                     <button type="submit" class="login-button">Iniciar Sesión</button>
                 </form>
                 <div class="links">
-                    <a href="recuperarcontraseña.php">¿Olvidó su contraseña?</a>
-                    <a href="register.php">Registrarse</a>
+                    <a href="../sesion/recuperarcontraseña.php">¿Olvidó su contraseña?</a>
+                    <a href="../sesion/register.php">Registrarse</a>
                 </div>
             </div>
         </main>

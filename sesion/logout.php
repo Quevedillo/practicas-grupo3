@@ -13,6 +13,6 @@ if (isset($_COOKIE['remember_me'])) {
 }
 
 // Redirigir al login
-header("Location: login.php");
+header("Location: ../sesion/login.php");
 exit();
 ?>
