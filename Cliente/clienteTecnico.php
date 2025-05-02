@@ -29,7 +29,7 @@ require '../Conexion/database.php';
                 <div class="user-menu">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                     <div class="user-dropdown">
-                        <a href="logout.php">Cerrar Sesión</a>
+                        <a href="../sesion/logout.php">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@ require '../Conexion/database.php';
                         <label for="tecnico">Seleccionar Técnico:</label>
                         <select id="tecnico" name="tecnico" required>
                             <?php
-                            require 'database.php';
+                            require '../Conexion/database.php';
                             $stmt = $pdo->prepare("SELECT id, username FROM users WHERE role = 'tech'");
                             $stmt->execute();
                             $tecnicos = $stmt->fetchAll();
