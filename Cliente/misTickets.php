@@ -95,8 +95,8 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
 
     <nav class="navbar">
     <ul>
-                <li><a href="../Cliente/dashboard.php" class="active">Panel</a></li>
-                <li><a href="../Cliente/misTickets.php">Mis Tickets</a></li>
+                <li><a href="../Cliente/dashboard.php">Panel</a></li>
+                <li><a href="../Cliente/misTickets.php" class="active">Mis Tickets</a></li>
                 <li><a href="../gestionPerfilUsuario.php">Editar Perfil</a></li>
                 <li><a href="../Cliente/clienteTecnico.php">Comunicación</a></li>
             </ul>
@@ -155,8 +155,8 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
                     <td><?= htmlspecialchars($ticket['created_at']) ?></td>
                     <td><?= ucfirst(str_replace('_', ' ', htmlspecialchars($ticket['status']))) ?></td>
                     <td>
-                        <a href="editar_ticket.php?id=<?= $ticket['id'] ?>" class="edit-button">Editar</a>
-                        <a href="ver_ticket.php?id=<?= $ticket['id'] ?>" class="view-button">Ver Comentarios</a>
+                        <a href="../Ticket/editar_ticket.php?id=<?= $ticket['id'] ?>" class="edit-button">Editar</a>
+                        <a href="../Ticket/ver_ticket.php?id=<?= $ticket['id'] ?>" class="view-button">Ver Comentarios</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
