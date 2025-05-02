@@ -47,7 +47,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Sistema de Tickets</title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
 </head>
 <body>
     <div class="container">
@@ -62,7 +62,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="user-menu">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                     <div class="user-dropdown">
-                        <a href="logout.php">Cerrar Sesión</a>
+                        <a href="../sesion/logout.php">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
@@ -70,10 +70,10 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <nav class="navbar">
             <ul>
-                <li><a href="dashboard.php" class="active">Panel</a></li>
-                <li><a href="misTickets.php">Mis Tickets</a></li>
-                <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
-                <li><a href="clienteTecnico.php">Comunicación</a></li>
+                <li><a href="../Cliente/dashboard.php" class="active">Panel</a></li>
+                <li><a href="../Cliente/misTickets.php">Mis Tickets</a></li>
+                <li><a href="../gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="../Cliente/clienteTecnico.php">Comunicación</a></li>
             </ul>
         </nav>
 
@@ -98,7 +98,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p><?php echo count($tickets); ?></p>
                     </div>
                 </div>
-                <button class="new-ticket-button"><a href="crearTicket.php">+ Nuevo Ticket</a></button>
+                <button class="new-ticket-button"><a href="../Ticket/crearTicket.php">+ Nuevo Ticket</a></button>
             </div>
 
             <div class="recent-tickets">
@@ -141,7 +141,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($ticket['status']) ?></td>
                 <td><?= htmlspecialchars($ticket['created_at']) ?></td>
                 <td><?= htmlspecialchars($ticket['updated_at']) ?></td>
-                <td><a href="ver_ticket.php?id=<?= $ticket['id'] ?>">Ver detalles</a></td>
+                <td><a href="../Ticket/ver_ticket.php?id=<?= $ticket['id'] ?>">Ver detalles</a></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -151,7 +151,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 
     <div style="margin-top: 20px; text-align: right;">
-        <a href="misTickets.php" class="btn-ver-todos">Ver todos los tickets →</a>
+        <a href="../Cliente/misTickets.php" class="btn-ver-todos">Ver todos los tickets →</a>
     </div>
 </div>
 
