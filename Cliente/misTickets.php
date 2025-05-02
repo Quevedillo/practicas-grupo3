@@ -97,7 +97,7 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
     <ul>
                 <li><a href="../Cliente/dashboard.php">Panel</a></li>
                 <li><a href="../Cliente/misTickets.php" class="active">Mis Tickets</a></li>
-                <li><a href="../gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="../Cliente/gestionPerfilUsuario.php">Editar Perfil</a></li>
                 <li><a href="../Cliente/clienteTecnico.php">Comunicación</a></li>
             </ul>
     </nav>
