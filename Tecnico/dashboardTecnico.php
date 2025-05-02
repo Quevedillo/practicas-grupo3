@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Filtros avanzados
-    if (isset($_POST['apply_filters'])) {
+    if (isset($_POST['apply_filters'])) { 
         $status_filter = $_POST['status_filter'] ?? [];
         $priority_filter = $_POST['priority_filter'] ?? [];
         $category_filter = $_POST['category_filter'] ?? [];
