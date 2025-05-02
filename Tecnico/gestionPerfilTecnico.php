@@ -80,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <nav class="navbar">
             <ul>
-                <li><a href="../Tecnico/dashboardTecnico.php" class="active">Panel Técnico</a></li>
-                <li><a href="../Tecnico/gestionPerfilTecnico.php">Editar Perfil</a></li>
+                <li><a href="../Tecnico/dashboardTecnico.php">Panel Técnico</a></li>
+                <li><a href="../Tecnico/gestionPerfilTecnico.php" class="active">Editar Perfil</a></li>
             </ul>
         </nav>
 
