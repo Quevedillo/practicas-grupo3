@@ -2,11 +2,11 @@
 session_start();
 
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
-require 'database.php';
+require '../Conexion/database.php';
 
 // Filtrado
 $estado = $_GET['status'] ?? '';
@@ -72,7 +72,7 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
 <head>
     <meta charset="UTF-8">
     <title>Mis Tickets</title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
 </head>
 <body>
 <div class="container">
@@ -87,19 +87,19 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
             <div class="user-menu">
                 <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                 <div class="user-dropdown">
-                    <a href="logout.php">Cerrar Sesión</a>
+                    <a href="../sesion/logout.php">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
     </header>
 
     <nav class="navbar">
-        <ul>
-            <li><a href="dashboard.php">Panel</a></li>
-            <li><a href="misTickets.php" class="active">Mis Tickets</a></li>
-            <li><a href="gestionPerfilUsuario.php">Editar Perfil</a></li>
-            <li><a href="clienteTecnico.php">Comunicación</a></li>
-        </ul>
+    <ul>
+                <li><a href="../Cliente/dashboard.php">Panel</a></li>
+                <li><a href="../Cliente/misTickets.php" class="active">Mis Tickets</a></li>
+                <li><a href="../Cliente/gestionPerfilUsuario.php">Editar Perfil</a></li>
+                <li><a href="../Cliente/clienteTecnico.php">Comunicación</a></li>
+            </ul>
     </nav>
 
     <main class="main-content">
@@ -155,8 +155,8 @@ function linkWithOrder($field, $label, $currentField, $currentDir) {
                     <td><?= htmlspecialchars($ticket['created_at']) ?></td>
                     <td><?= ucfirst(str_replace('_', ' ', htmlspecialchars($ticket['status']))) ?></td>
                     <td>
-                        <a href="editar_ticket.php?id=<?= $ticket['id'] ?>" class="edit-button">Editar</a>
-                        <a href="ver_ticket.php?id=<?= $ticket['id'] ?>" class="view-button">Ver Comentarios</a>
+                        <a href="../Ticket/editar_ticket.php?id=<?= $ticket['id'] ?>" class="edit-button">Editar</a>
+                        <a href="../Ticket/ver_ticket.php?id=<?= $ticket['id'] ?>" class="view-button">Ver Comentarios</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

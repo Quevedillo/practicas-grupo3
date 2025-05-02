@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'database.php';
+require '../Conexion/database.php';
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mensaje = trim($_POST['mensaje'] ?? '');
 
     if (empty($asunto) || empty($tecnico_id) || empty($mensaje)) {
-        die("Error: Todos los campos son obligatorios");
+        die("Error: Todos los campos son obligaatorios");
     }
 
     // Verificar que el usuario está autenticado
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Enviar el mensaje
         if ($mail->send()) {
-            header("Location: clienteTecnico.php?success=1");
+            header("Location: ../Cliente/clienteTecnico.php?success=1");
             exit;
         } else {
             die("Error al enviar el correo: " . $mail->ErrorInfo);
