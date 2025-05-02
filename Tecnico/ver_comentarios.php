@@ -1,6 +1,6 @@
 <?php
 // Requerir el archivo de conexión
-require 'database.php';
+require '../Conexion/database.php';
 
 // Validar si existe el parámetro 'ticket_id' en la URL
 if (!isset($_GET['ticket_id']) || !is_numeric($_GET['ticket_id'])) {
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_comment_id']))
     try {
         $stmt = $pdo->prepare($delete_sql);
         $stmt->execute(['id' => $delete_id]);
-        header("Location: ver_comentarios.php?ticket_id=" . $ticket_id);
+        header("Location: ../Tecnico/ver_comentarios.php?ticket_id=" . $ticket_id);
         exit();
     } catch (PDOException $e) {
         die("Error al eliminar el comentario: " . $e->getMessage());
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_comment'])) {
                 'user_id' => $user_id,
                 'comment' => $comment
             ]);
-            header("Location: ver_comentarios.php?ticket_id=" . $ticket_id);
+            header("Location: ../Tecnico/ver_comentarios.php?ticket_id=" . $ticket_id);
             exit();
         } catch (PDOException $e) {
             die("Error al agregar el comentario: " . $e->getMessage());
@@ -67,7 +67,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comentarios del Ticket #<?= htmlspecialchars($ticket_id) ?></title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
     <style>
         /* Estilos mínimos para el diseño */
         body {
@@ -140,7 +140,7 @@ try {
             </div>
 
             <h3>Agregar un Comentario</h3>
-            <form method="POST" action="ver_comentarios.php?ticket_id=<?= htmlspecialchars($ticket_id) ?>" class="comment-form">
+            <form method="POST" action="../Tecnico/ver_comentarios.php?ticket_id=<?= htmlspecialchars($ticket_id) ?>" class="comment-form">
                 <textarea name="new_comment" rows="4" placeholder="Escribe tu comentario..." required></textarea>
                 <button type="submit">Agregar Comentario</button>
             </form>
