@@ -17,17 +17,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $attachment_path = null;
 
     if (empty($title) || empty($category_id) || empty($priority) || empty($description)) {
-        echo "Todos los campos son obligatorios.";
+        $_SESSION['error_message'] = "Todos los campos son obligatorios.";
+        header("Location: crearTicket.php");
         exit();
     }
 
     if (!empty($_FILES['attachment']['name'])) {
         $upload_dir = "uploads/";
     
-        // Verifica si la carpeta de carga existe, si no, la crea
         if (!is_dir($upload_dir)) {
             if (!mkdir($upload_dir, 0777, true)) {
-                echo "Error al crear la carpeta de subida.";
+                $_SESSION['error_message'] = "Error al crear la carpeta de subida.";
+                header("Location: crearTicket.php");
                 exit();
             }
         }
@@ -38,12 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (move_uploaded_file($_FILES["attachment"]["tmp_name"], $target_file)) {
             $attachment_path = $target_file;
         } else {
-            echo "Error al subir el archivo.";
+            $_SESSION['error_message'] = "Error al subir el archivo.";
+            header("Location: crearTicket.php");
             exit();
         }
     }
     
-
     try {
         $pdo->beginTransaction();
         $stmt = $pdo->prepare("INSERT INTO tickets (user_id, category_id, title, description, priority, status, created_at) VALUES (?, ?, ?, ?, ?, 'open', NOW())");
@@ -57,11 +58,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $pdo->commit();
+        $_SESSION['success_message'] = "Se ha creado el ticket con éxito";
         header("Location: ../Cliente/dashboard.php");
         exit();
     } catch (PDOException $e) {
         $pdo->rollBack();
-        echo "Error al crear el ticket: " . $e->getMessage();
+        $_SESSION['error_message'] = "Error al crear el ticket: " . $e->getMessage();
+        header("Location: crearTicket.php");
+        exit();
     }
 }
 ?>
@@ -85,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <button onclick="toggleDarkMode()">Modo Oscuro</button>
                 </div>
                 <div class="user-menu">
-                    <span>Usuario</span>
+                    <span><?php echo htmlspecialchars($_SESSION['username'] ?? 'Usuario'); ?></span>
                 </div>
             </div>
         </header>
@@ -100,6 +104,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </nav>
 
         <main class="main-content">
+            <?php if (isset($_SESSION['error_message'])): ?>
+                <div class="alert alert-error">
+                    <?php 
+                        echo $_SESSION['error_message']; 
+                        unset($_SESSION['error_message']);
+                    ?>
+                </div>
+            <?php endif; ?>
+
             <div class="new-ticket-form">
                 <h2>Crear Nuevo Ticket</h2>
                 <form action="crearTicket.php" method="POST" enctype="multipart/form-data">
@@ -139,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="cancel-button" onclick="window.location.href='dashboard.php'">Cancelar</button>
+                        <button type="button" class="cancel-button" onclick="window.location.href='../Cliente/dashboard.php'">Cancelar</button>
                         <button type="submit" class="create-ticket-button">Crear Ticket</button>
                     </div>
                 </form>

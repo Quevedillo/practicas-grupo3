@@ -7,6 +7,13 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
+// Mostrar mensaje de éxito si existe
+$success_message = '';
+if (isset($_SESSION['success_message'])) {
+    $success_message = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
+}
+
 // Filtros desde GET
 $estado = $_GET['status'] ?? '';
 $categoria = $_GET['category'] ?? '';
@@ -48,6 +55,16 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Sistema de Tickets</title>
     <link rel="stylesheet" href="../css/estilodashboard.css">
+    <style>
+        .alert-success {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            color: #3c763d;
+            background-color: #dff0d8;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -78,6 +95,12 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </nav>
 
         <main class="main-content">
+            <?php if (!empty($success_message)): ?>
+                <div class="alert-success">
+                    <?php echo htmlspecialchars($success_message); ?>
+                </div>
+            <?php endif; ?>
+
             <div class="dashboard-summary">
                 <h2>Resumen</h2>
                 <div class="summary-cards">
@@ -102,59 +125,58 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="recent-tickets">
-    <h2>Tickets Recientes</h2>
+                <h2>Tickets Recientes</h2>
 
-    <form method="GET" class="filter-form">
-        <!-- (formulario igual que antes, sin cambios) -->
-        <!-- ... -->
-    </form>
+                <form method="GET" class="filter-form">
+                    <!-- (formulario igual que antes, sin cambios) -->
+                    <!-- ... -->
+                </form>
 
-    <?php
-    $ticketsRecientes = array_filter($tickets, function($ticket) {
-        $fechaTicket = strtotime($ticket['created_at']);
-        $unaSemanaAntes = strtotime('-7 days');
-        return $fechaTicket >= $unaSemanaAntes;
-    });
-    ?>
+                <?php
+                $ticketsRecientes = array_filter($tickets, function($ticket) {
+                    $fechaTicket = strtotime($ticket['created_at']);
+                    $unaSemanaAntes = strtotime('-7 days');
+                    return $fechaTicket >= $unaSemanaAntes;
+                });
+                ?>
 
-    <?php if (count($ticketsRecientes) > 0): ?>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Descripción</th>
-                <th>Prioridad</th>
-                <th>Estado</th>
-                <th>Fecha de creación</th>
-                <th>Fecha actualización</th>
-                <th>Ver detalles</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($ticketsRecientes as $ticket): ?>
-            <tr>
-                <td><?= htmlspecialchars($ticket['id']) ?></td>
-                <td><?= htmlspecialchars($ticket['title']) ?></td>
-                <td><?= htmlspecialchars($ticket['description']) ?></td>
-                <td><?= htmlspecialchars($ticket['priority']) ?></td>
-                <td><?= htmlspecialchars($ticket['status']) ?></td>
-                <td><?= htmlspecialchars($ticket['created_at']) ?></td>
-                <td><?= htmlspecialchars($ticket['updated_at']) ?></td>
-                <td><a href="../Ticket/ver_ticket.php?id=<?= $ticket['id'] ?>">Ver detalles</a></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <?php else: ?>
-    <p>No se han creado tickets en la última semana.</p>
-    <?php endif; ?>
+                <?php if (count($ticketsRecientes) > 0): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Prioridad</th>
+                            <th>Estado</th>
+                            <th>Fecha de creación</th>
+                            <th>Fecha actualización</th>
+                            <th>Ver detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($ticketsRecientes as $ticket): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($ticket['id']) ?></td>
+                            <td><?= htmlspecialchars($ticket['title']) ?></td>
+                            <td><?= htmlspecialchars($ticket['description']) ?></td>
+                            <td><?= htmlspecialchars($ticket['priority']) ?></td>
+                            <td><?= htmlspecialchars($ticket['status']) ?></td>
+                            <td><?= htmlspecialchars($ticket['created_at']) ?></td>
+                            <td><?= htmlspecialchars($ticket['updated_at']) ?></td>
+                            <td><a href="../Ticket/ver_ticket.php?id=<?= $ticket['id'] ?>">Ver detalles</a></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php else: ?>
+                <p>No se han creado tickets en la última semana.</p>
+                <?php endif; ?>
 
-    <div style="margin-top: 20px; text-align: right;">
-        <a href="../Cliente/misTickets.php" class="btn-ver-todos">Ver todos los tickets →</a>
-    </div>
-</div>
-
+                <div style="margin-top: 20px; text-align: right;">
+                    <a href="../Cliente/misTickets.php" class="btn-ver-todos">Ver todos los tickets →</a>
+                </div>
+            </div>
         </main>
     </div>
 
