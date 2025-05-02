@@ -2,11 +2,11 @@
 session_start();
 
 if (!isset($_SESSION['id'])) {
-    header('Location: login.php');
+    header('Location: ../sesion/login.php');
     exit();
 }
 
-require 'database.php';
+require '../Conexion/database.php';
 
 $sql = "SELECT username, email FROM users WHERE id = :id";
 $stmt = $pdo->prepare($sql);
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Perfil</title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
 </head>
 <body>
     <div class="container">
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="user-menu">
                 <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                     <div class="user-dropdown">
-                        <a href="logout.php">Cerrar Sesión</a>
+                        <a href="../sesion/logout.php">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
@@ -80,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <nav class="navbar">
             <ul>
-                <li><a href="dashboardTecnico.php" class="active">Panel Técnico</a></li>
-                <li><a href="gestionPerfilTecnico.php">Editar Perfil</a></li>
+                <li><a href="../Tecnico/dashboardTecnico.php" class="active">Panel Técnico</a></li>
+                <li><a href="../Tecnico/gestionPerfilTecnico.php">Editar Perfil</a></li>
             </ul>
         </nav>
 
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if (!empty($mensaje)): ?>
                     <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
                 <?php endif; ?>
-                <form method="POST" action="gestionPerfilUsuario.php" class="profile-form" onsubmit="return validarFormulario()">
+                <form method="POST" action="../Cliente/gestionPerfilUsuario.php" class="profile-form" onsubmit="return validarFormulario()">
     <div class="form-group">
         <label for="username">Nombre de Usuario:</label>
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
