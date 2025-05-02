@@ -17,7 +17,7 @@ $stmt->execute([$_SESSION['id']]);
 $user = $stmt->fetch();
 
 if ($user['role'] !== 'tech' && $user['role'] !== 'admin') {
-    header('Location: dashboard.php');
+    header('Location: ../Cliente/dashboard.php');
     exit();
 }
 
@@ -64,8 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
         
-        header("Location: dashboardTecnico.php?updated=".$ticket_id);
+        header("Location: ../Tecnico/dashboardTecnico.php?updated=" . $ticket_id);
         exit();
+
     }
     
     // Búsqueda de tickets
@@ -126,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Técnico - Sistema de Tickets</title>
-    <link rel="stylesheet" href="estilodashboard.css">
+    <link rel="stylesheet" href="../css/estilodashboard.css">
     <style>
         .priority-urgent { background-color: #ffcccc; }
         .priority-high { background-color: #ffdddd; }
@@ -166,8 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <nav class="navbar">
             <ul>
-                <li><a href="dashboardTecnico.php" class="active">Panel Técnico</a></li>
-                <li><a href="gestionPerfilTecnico.php">Editar Perfil</a></li>
+                <li><a href="../Tecnico/dashboardTecnico.php" class="active">Panel Técnico</a></li>
+                <li><a href="../Tecnico/gestionPerfilTecnico.php">Editar Perfil</a></li>
             </ul>
         </nav>
 
@@ -197,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="search">Buscar:</label>
                         <input type="text" id="search" name="search" placeholder="ID, título o contenido">
                         <button type="submit">Buscar</button>
-                        <a href="dashboardTecnico.php" class="button">Limpiar</a>
+                        <a href="../Tecnico/dashboardTecnico.php" class="button">Limpiar</a>
                     </div>
                     
                     <div class="filter-group">
@@ -278,10 +279,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?php echo htmlspecialchars($ticket['status']); ?></td>
                             <td><?php echo $waiting_days; ?> días</td>
                             <td>
-                                <a class="btn btn-primary" href="detallesTecnico.php?id=<?php echo $ticket['id']; ?>">Detalles</a>
-                                <a href="ver_comentarios.php?ticket_id=<?php echo $ticket['id']; ?>" class="btn btn-secondary">Ver Comentarios</a>
+                                <a class="btn btn-primary" href="../Tecnico/detallesTecnico.php?id=<?php echo $ticket['id']; ?>">Detalles</a>
+                                <a href="../Tecnico/ver_comentarios.php?ticket_id=<?php echo $ticket['id']; ?>" class="btn btn-secondary">Ver Comentarios</a>
                                 <?php if ($user['role'] === 'admin'): ?>
-                                    <form method="post" action="eliminar_ticket.php" style="display:inline;" onsubmit="return confirm('¿Estás seguro de querer eliminar este ticket?');">
+                                    <form method="post" action="../Ticket/eliminar_ticket.php" style="display:inline;" onsubmit="return confirm('¿Estás seguro de querer eliminar este ticket?');">
                                         <input type="hidden" name="ticket_id" value="<?php echo $ticket['id']; ?>">
                                         <button type="submit" class="btn-danger">Eliminar</button>
                                     </form>
