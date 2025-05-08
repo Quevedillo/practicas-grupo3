@@ -61,7 +61,7 @@ $mail->isHTML(true);
 
 
 // Alternativa en texto plano
-$mail->Body = "<h3>Hola {$user['username']},</h3><p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href='http://localhost/grupo_solutia/ticket_system/reset_password.php?email=$email'>Restablecer contraseña</a></p>";
+$mail->Body = "<h3>Hola {$user['username']},</h3><p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href='http://localhost/practicas-grupo3/ticket_system/reset_password.php?email=$email'>Restablecer contraseña</a></p>";
 
 
             $mail->send();
