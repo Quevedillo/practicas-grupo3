@@ -19,34 +19,45 @@ try {
 // Verificar si el correo electrónico está en la URL
 if (isset($_GET['email']) && filter_var($_GET['email'], FILTER_VALIDATE_EMAIL)) {
     $email = $_GET['email'];
-
+    
     // Verificar si el correo electrónico existe en la base de datos
     $stmt = $pdo->prepare("SELECT id, username, email FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        // El usuario existe, proceder a cambiar la contraseña
+        // El usuario existe, mostrar formulario de cambio de contraseña
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $new_password = $_POST['new_password'];
-            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+            if (isset($_POST['new_password']) && !empty($_POST['new_password'])) {
+                $new_password = $_POST['new_password'];
+                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
-            // Actualizar la contraseña en la base de datos
-            $update_stmt = $pdo->prepare("UPDATE users SET password = :password WHERE email = :email");
-            $update_stmt->execute(['password' => $hashed_password, 'email' => $email]);
+                // Actualizar la contraseña en la base de datos
+                $update_stmt = $pdo->prepare("UPDATE users SET password = :password WHERE email = :email");
+                $update_stmt->execute(['password' => $hashed_password, 'email' => $email]);
 
-            // Mensaje de éxito y botón para volver al login
-            echo "<p style='color: green;'>Tu contraseña ha sido restablecida correctamente.</p>";
-            echo "<a href='login.php'><button>Volver al Login</button></a>";
-            exit();
+                // Redirigir al login con mensaje de éxito
+                header('Location: ../sesion/login.php?success=1');
+                exit();
+            }
         }
 
+        // Mostrar formulario de cambio de contraseña
+        echo "<h2>Cambiar contraseña</h2>";
+        echo "<form method='POST'>";
+        echo "    <label for='new_password'>Nueva contraseña:</label>";
+        echo "    <input type='password' name='new_password' id='new_password' required>";
+        echo "    <button type='submit'>Cambiar contraseña</button>";
+        echo "</form>";
+        echo "<p><a href='../sesion/login.php'>Volver al login</a></p>";
     } else {
         echo "No se encontró un usuario con ese correo electrónico.";
+        echo "<p><a href='olvidarContra.php'>Volver a intentar</a></p>";
         exit();
     }
 } else {
     echo "Acceso no autorizado. Asegúrate de que el enlace es correcto.";
+    echo "<p><a href='olvidarContra.php'>Solicitar nuevo enlace</a></p>";
     exit();
 }
 ?>

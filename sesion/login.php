@@ -217,7 +217,7 @@ if (!isset($_SESSION['id']) && isset($_COOKIE['remember_me'])) {
                     <button type="submit" class="login-button">Iniciar Sesión</button>
                 </form>
                 <div class="links">
-                    <a href="../olvidarContra.php">¿Olvidó su contraseña?</a>
+                    <a href="../enviarCorreosRecuperarContra/olvidarContra.php">¿Olvidó su contraseña?</a>
                     <a href="../sesion/register.php">Registrarse</a>
                 </div>
             </div>
