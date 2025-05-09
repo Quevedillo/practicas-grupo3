@@ -1,5 +1,5 @@
 <?php
-require_once 'ticket_system/vendor/autoload.php';
+require_once 'tickets_system/vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -63,7 +63,7 @@ $mail->isHTML(true);
 // Alternativa en texto plano
 $mail->Body = "<h3>Hola {$user['username']},</h3>
 <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-<p><a href='http://$_SERVER[HTTP_HOST]/practicas-grupo3/ticket_system/reset_password.php?email=$email'>Restablecer contraseña</a></p>
+<p><a href='http://$_SERVER[HTTP_HOST]/practicas-grupo3/tickets_system/reset_password.php?email=$email'>Restablecer contraseña</a></p>
 <p>Si no solicitaste este correo, puedes ignorarlo.</p>
 <p>Este enlace expirará en 24 horas.</p>";
 
