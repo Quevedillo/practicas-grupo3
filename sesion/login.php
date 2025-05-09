@@ -81,8 +81,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                         
                         // Redirección según el rol
-                        $redirect_page = ($user['role'] === 'tech') ? '../Tecnico/dashboardTecnico.php' : '../Cliente/dashboard.php';
-                        
+                        if ($user['role'] === 'tech') {
+                            $redirect_page = '../Tecnico/dashboardTecnico.php';
+                        }
+                        if ($user['role'] === 'admin') {
+                            $redirect_page = '../ticket_system_josemanue/views/admin/dashboard.php';
+                        }
+                        if ($user['role'] === 'client') {
+                            $redirect_page = '../Cliente/dashboard.php';
+                        }
+                         
                         // Redirección con JavaScript como respaldo
                         echo '<script>window.location.href = "'.$redirect_page.'";</script>';
                         header("Location: ".$redirect_page);
