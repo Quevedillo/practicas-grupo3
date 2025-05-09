@@ -7,7 +7,7 @@ require_once 'ticket_system/views/partials/header.php';
         <h1>Crear Nuevo Usuario</h1>
     </div>
     
-    <?php if (!empty($errors)): ?>
+    <?php if (!empty($errors) && is_array($errors)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <ul class="mb-0">
                 <?php foreach ($errors as $error): ?>
