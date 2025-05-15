@@ -61,7 +61,13 @@ $mail->isHTML(true);
 
 
 // Alternativa en texto plano
-$mail->Body = "<h3>Hola {$user['username']},</h3><p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href='http://" . $_SERVER['HTTP_HOST'] . "/practicas-grupo3/enviarCorreosRecuperarContra/reset_password.php?email=" . urlencode($email) . "'>Restablecer contraseña</a></p>";
+// Obtener la URL base del servidor
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+$host = $_SERVER['HTTP_HOST'];
+$base_path = rtrim(dirname(dirname($_SERVER['PHP_SELF'])), '/\\');
+$reset_url = $protocol . $host . $base_path . '/enviarCorreosRecuperarContra/reset_password.php?email=' . urlencode($email);
+
+$mail->Body = "<h3>Hola {$user['username']},</h3><p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p><p><a href='$reset_url'>Restablecer contraseña</a></p>";
 
 
             $mail->send();

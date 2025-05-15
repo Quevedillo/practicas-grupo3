@@ -70,7 +70,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <header class="header">
             <div class="logo">
-                <img src="https://camaradesevilla.com/wp-content/uploads/2024/07/S00-logo-Grupo-Solutia-v01-1.png" alt="Logo del Sistema">
+                <img src="<?php echo url('assets/img/logo.png'); ?>" alt="Logo del Sistema">
             </div>
             <div class="header-right">
                 <div class="theme-toggle">
@@ -79,7 +79,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="user-menu">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?> ▼</span>
                     <div class="user-dropdown">
-                        <a href="../sesion/logout.php">Cerrar Sesión</a>
+                        <a href="<?php echo url('sesion/logout.php'); ?>">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
